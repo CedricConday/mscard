@@ -35,17 +35,18 @@ def main(root: Path) -> None:
                 agg["lights"].setdefault(k, {}).setdefault(v, 0)
                 agg["lights"][k][v] += 1
         agg["bound"].append(br.get("boundary_light"))
-        f = lambda x, d=1: "–" if x is None else f"{x:.{d}f}"  # noqa: E731
+        f = lambda x, d=1: "–" if x is None else f"{x:.{d}f}"
         print(f"| {name} | {f(M['interval_years'], 2)} | {L['baseline_count']} | {L['new']} | {L['enlarging']} | {L['shrinking']} | {L['resolved']} | {M['sel']['candidates']} | "
               f"{f(L['volume_change_pct_per_year'])} | {f(br['change_pct_per_year'], 2)} ({f(br.get('change_pct_per_year_eroded'), 2)}) | {br.get('boundary_light', '–')} | "
               f"{n.get('reported', '–')}/{n.get('injected', '–')} | {n.get('false_new', '–')} | {u.get('called_enlarging_or_shrinking', '–')}/{u.get('n', '–')} | "
               f"{f(s.get('per_baseline_lesion'), 2)} | {f(b.get('jacobian_recovery'), 2)} |")
     print()
+    bound = {k: agg["bound"].count(k) for k in ("green", "amber", "red")}
     print(f"Subjects: {len(rows)}. Injected new lesions reported: {agg['found']} of {agg['injected']}; false new: {agg['false_new']}. "
           f"Unchanged lesions called enlarging or shrinking: {agg['changed']} of {agg['unchanged']}; called resolved: {agg['resolved']}. "
           f"SEL candidates per unchanged lesion: median {statistics.median(agg['sel']):.2f} (range {min(agg['sel']):.2f} to {max(agg['sel']):.2f}). "
           f"Atrophy recovery: median {statistics.median(agg['rec']):.2f} (range {min(agg['rec']):.2f} to {max(agg['rec']):.2f}). "
-          f"Boundary check on the real pairs: {dict((k, agg['bound'].count(k)) for k in ('green', 'amber', 'red'))}.")
+          f"Boundary check on the real pairs: {bound}.")
     print("Lights:", json.dumps(agg["lights"]))
 
 

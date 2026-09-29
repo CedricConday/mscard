@@ -24,7 +24,14 @@ from scipy import ndimage as ndi
 from .config import Bands, SyntheticParams
 from .spec import Scan
 
+
+def label_lesions(mask: np.ndarray, connectivity: int = 2) -> np.ndarray:
+    from lesiontrack.tracking import label_lesions as _ll
+
+    return _ll(mask, connectivity)
+
 SESSION = "SYN"
+TRUTH_FORMAT = 2  # bump when the synthetic construction or the truth record changes; old caches are rebuilt
 
 
 def _save(arr: np.ndarray, like: nib.Nifti1Image, path: Path, dtype=None) -> Path:
@@ -46,7 +53,7 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
     params_json = json.loads(json.dumps(sp.__dict__))  # tuples become lists, as in the stored truth
     if truth_json.exists() and all(p.exists() for p in (t1_p, fl_p, mask_p, brain_p, new_p)):
         truth = json.loads(truth_json.read_text())
-        if truth.get("params") == params_json and truth.get("source") == _source(baseline):
+        if truth.get("format") == TRUTH_FORMAT and truth.get("params") == params_json and truth.get("source") == _source(baseline):
             truth["rewritten"] = False
             return _scan(baseline, out_dir, sp), truth
     if baseline.mask is None or baseline.brainmask is None:
@@ -76,8 +83,13 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
     disp = displacement(t1.shape, zooms, brain, sp.volume_factor, sp.falloff_mm)
     t1a = _warp(t1, disp, 1)
     fla = _warp(fl, disp, 1)
-    maska = _warp(mask.astype(np.float32), disp, 1) >= 0.5  # binary masks follow the field as level sets,
-    braina = _warp(brain.astype(np.float32), disp, 1) >= 0.5  # not nearest-neighbour, which keeps the old boundary
+    # Masks follow the field as the zero level set of their signed distance: nearest-neighbour
+    # keeps the old boundary, and a 0.5 threshold on an interpolated binary mask erodes small
+    # lesions; the signed distance moves the boundary by the field and nothing else.
+    lab_bl = label_lesions(mask, 2)
+    laba = _warp_labels(lab_bl, disp, zooms)
+    maska = laba > 0
+    braina = _warp_mask(brain, disp, zooms)
     del disp
 
     # 2. New lesions, placed by bidsgate inside a brain mask that excludes a margin around every
@@ -104,10 +116,15 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
     rig = _rigid_field(t1.shape, rot, trans)
     t1c = _warp(t1b, rig, 1)
     flc = _warp(flb, rig, 1)
-    maskc = _warp((maska | (newb > 0)).astype(np.float32), rig, 1) >= 0.5
-    newc = _warp_labels(newb, rig)
-    brainc = _warp(braina.astype(np.float32), rig, 1) >= 0.5
+    labc = _warp_labels(laba, rig, zooms)
+    newc = _warp_labels(newb, rig, zooms)
+    maskc = (labc > 0) | (newc > 0)
+    brainc = _warp_mask(braina, rig, zooms)
     del rig
+    vox = float(np.prod(zooms))
+    vb, va = np.bincount(lab_bl.ravel()), np.bincount(labc.ravel(), minlength=lab_bl.max() + 1)
+    baseline_lesions = [{"id": int(i), "volume_before_mm3": float(vb[i] * vox), "volume_after_mm3": float(va[i] * vox)}
+                        for i in range(1, lab_bl.max() + 1)]
     gains = rng.uniform(*sp.intensity_scale, 2)
     head = t1c > 0
     for arr, g in ((t1c, gains[0]), (flc, gains[1])):
@@ -120,12 +137,13 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
     _save(maskc, img, mask_p, np.uint8)
     _save(brainc, img, brain_p, np.uint8)
     _save(newc, img, new_p, np.int32)
+    _save(labc, img, out_dir / "baselinelesions_truth.nii.gz", np.int32)
     for p in tmp.glob("*"):
         p.unlink()
     tmp.rmdir()
-    vox = float(np.prod(zooms))
     truth = {
         "rewritten": True,
+        "format": TRUTH_FORMAT,
         "kind": "mscard synthetic follow-up",
         "session": SESSION,
         "dt_years": sp.dt_years,
@@ -134,9 +152,10 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
         "n_new": sp.n_new,
         "new_lesions": new_truth["lesions"],
         "new_lesion_volume_mm3": new_truth["total_volume_mm3"],
-        "baseline_lesion_count_truth": int(ndi.label(maska, structure=ndi.generate_binary_structure(3, 2))[1]),
-        "baseline_lesion_volume_after_contraction_mm3": float(maska.sum() * vox),
+        "baseline_lesion_count_truth": int(lab_bl.max()),
         "baseline_lesion_volume_mm3": float(mask.sum() * vox),
+        "baseline_lesion_volume_after_mm3": float((labc > 0).sum() * vox),
+        "baseline_lesions": baseline_lesions,
         "rigid": {"rot_deg": rot.tolist(), "trans_vox": trans.tolist()},
         "gains": gains.tolist(),
         "seed": seed,
@@ -144,7 +163,8 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
         "source": _source(baseline),
         "truth_per_line": {
             "new": "exactly the injected lesions; any other follow-up-only component is false",
-            "enlarging/shrinking/resolved": "none; every baseline lesion is unchanged apart from the global factor",
+            "enlarging/shrinking/resolved": "per lesion in baseline_lesions: volume_after_mm3 against volume_before_mm3 "
+                                           "(the global factor plus voxel quantisation of the moved boundary); no lesion resolves",
             "sel": "none; no lesion expands",
             "brain_volume_change_pct": (sp.volume_factor - 1) * 100,
         },
@@ -165,11 +185,19 @@ def _source(baseline: Scan) -> dict:
     return rec
 
 
-def _warp_labels(labels: np.ndarray, disp: np.ndarray) -> np.ndarray:
+def _warp_mask(mask: np.ndarray, disp: np.ndarray, zooms: tuple) -> np.ndarray:
+    """Move a binary mask by a sampling field as the zero level set of its signed distance (mm)."""
+    from bidsgate.inject_atrophy import _warp
+
+    sd = (ndi.distance_transform_edt(~mask, sampling=zooms) - ndi.distance_transform_edt(mask, sampling=zooms)).astype(np.float32)
+    return _warp(sd, disp, 1, cval=1e3) <= 0
+
+
+def _warp_labels(labels: np.ndarray, disp: np.ndarray, zooms: tuple) -> np.ndarray:
     """Warp an integer label map: the support as a level set, labels by nearest neighbour then nearest fill."""
     from bidsgate.inject_atrophy import _warp
 
-    support = _warp((labels > 0).astype(np.float32), disp, 1) >= 0.5
+    support = _warp_mask(labels > 0, disp, zooms)
     nn = _warp(labels, disp, 0)
     missing = support & (nn == 0)
     if missing.any():
@@ -249,12 +277,49 @@ def grade(baseline: Scan, syn: Scan, cal_dir: Path, measurement: dict, truth: di
         if len(s):
             by_size[name] = {"n": len(s), "reported": int(s["reported"].sum()), "segmented": int(s["segmented"].sum())}
 
+    # Baseline lesions: the truth for each is its own volume in the synthetic mask (the global
+    # factor plus the voxel quantisation of a moved boundary), so a call is judged against the
+    # class that truth rate falls in, with lesiontrack's own bands.
+    from lesiontrack.config import TrackParams
+    from lesiontrack.tracking import classify_rate
+
+    bl_truth_half = cal_dir / "baselinelesions_truth_halfway.nii.gz"
+    run_greedy(f"-d 3 -threads {threads} -rf {baseline.t1} -ri NN -rt short -rm {syn.t1.parent / 'baselinelesions_truth.nii.gz'} "
+               f"{bl_truth_half} -r {half}", cal_dir / "reslice.log")
+    tb = np.asarray(nib.load(bl_truth_half).dataobj).astype(np.int32)
+    lb = np.asarray(nib.load(lt / "baseline_lesion_labels.nii.gz").dataobj).astype(np.int32)
+    tinfo = {x["id"]: x for x in truth.get("baseline_lesions", [])}
+    dt = truth["dt_years"]
+    vox = measurement["voxel_mm3"]
+    tp = TrackParams()
     base = table[table["n_baseline"] > 0]
-    n_base = int(base["n_baseline"].sum()) if len(base) else 0  # lesions, not groups: a merged group counts each member
-    cls = base["class"].value_counts().to_dict()
-    false_change = int(cls.get("enlarging", 0) + cls.get("shrinking", 0))
-    false_trend = int(cls.get("trend_up", 0) + cls.get("trend_down", 0))
-    false_resolved = int(cls.get("resolved", 0))
+    judged = []
+    for _, r in base.iterrows():
+        sel = np.isin(lb, _ids(r["baseline_ids"]))
+        ids = [int(i) for i in np.unique(tb[sel]) if i > 0 and int(i) in tinfo]
+        if not ids:
+            continue
+        before = sum(tinfo[i]["volume_before_mm3"] for i in ids)
+        after = sum(tinfo[i]["volume_after_mm3"] for i in ids)
+        if after <= 0:
+            t_cls, t_rate = "resolved", -100.0 / dt
+        else:
+            t_rate = (after - before) / before * 100.0 / dt
+            t_cls = classify_rate(t_rate, round((after - before) / vox), tp)
+        judged.append({"group_id": int(r["group_id"]), "predicted": str(r["class"]), "truth": t_cls,
+                       "truth_rate_pct_per_year": t_rate, "predicted_rate_pct_per_year": None if r["class"] == "resolved" else float(r["pct_per_year"]),
+                       "n_lesions": len(ids)})
+    n_base = sum(j["n_lesions"] for j in judged)
+    cls = {}
+    for j in judged:
+        cls[j["predicted"]] = cls.get(j["predicted"], 0) + 1
+    changed = {"enlarging", "shrinking"}
+    false_change = sum(1 for j in judged if j["predicted"] in changed and j["truth"] not in changed)
+    missed_change = sum(1 for j in judged if j["truth"] in changed and j["predicted"] not in changed and j["predicted"] != "resolved")
+    false_trend = sum(1 for j in judged if j["predicted"] in ("trend_up", "trend_down") and j["truth"] == "stable")
+    false_resolved = sum(1 for j in judged if j["predicted"] == "resolved" and j["truth"] != "resolved")
+    agree = sum(1 for j in judged if j["predicted"] == j["truth"])
+    truth_changed = sum(1 for j in judged if j["truth"] in changed)
 
     inj = truth["injected_brain_change_pct"]
     jac = measurement["brain"]["jacobian"]["change_pct"]
@@ -286,12 +351,19 @@ def grade(baseline: Scan, syn: Scan, cal_dir: Path, measurement: dict, truth: di
         },
         "unchanged_lesions": {
             "n": n_base,
+            "groups": len(judged),
             "called_enlarging_or_shrinking": false_change,
+            "missed_enlarging_or_shrinking": missed_change,
+            "truth_enlarging_or_shrinking": truth_changed,
             "called_trend": false_trend,
             "called_resolved": false_resolved,
-            "false_change_rate": false_change / n_base if n_base else None,
-            "false_resolved_rate": false_resolved / n_base if n_base else None,
+            "class_agreement": agree / len(judged) if judged else None,
+            "false_change_rate": false_change / len(judged) if judged else None,
+            "false_resolved_rate": false_resolved / len(judged) if judged else None,
             "classes": {k: int(v) for k, v in cls.items()},
+            "per_group": judged,
+            "note": "truth per baseline lesion is its own volume in the synthetic mask; a call is false when it lands "
+                    "in the enlarging/shrinking band while the truth rate does not, and resolved is false when the lesion is still there",
         },
         "sel": {"candidates": n_cand, "per_baseline_lesion": n_cand / base_count, "truth": 0},
         "brain": {

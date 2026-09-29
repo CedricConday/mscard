@@ -128,17 +128,19 @@ def render(subject_dir: Path) -> Path:
                      f"placed at least {t['params']['exclusion_mm']:.0f} mm from every existing lesion, a rigid repositioning "
                      f"({', '.join(_f(v, 2) for v in t['rigid']['rot_deg'])} degrees; {', '.join(_f(v, 2) for v in t['rigid']['trans_vox'])} voxels), "
                      f"gains {', '.join(_f(v, 2) for v in t['gains'])} and {t['params']['noise_frac'] * 100:.0f} % noise. "
-                     f"Every baseline lesion is otherwise unchanged. The same pipeline then measured baseline against this synthetic scan.</p>")
+                     f"Every baseline lesion moves with the field and nothing else; its truth volume in the synthetic mask is recorded per lesion, "
+                     f"so each enlarging, shrinking or resolved call is judged against that lesion's own truth. The same pipeline then measured baseline against this synthetic scan.</p>")
         n, u, b, s = g["new_lesions"], g["unchanged_lesions"], g["brain"], g["sel"]
         rows = [
             ("New lesions", f"{n['injected']} injected", (f"{n['reported']} reported ({n['reported_as_new']} new, {n['reported_as_fragment']} adjacent fragment); "
              f"{n['false_new']} false new, {n['false_fragment']} false fragments; largest missed {_f(n['largest_missed_mm3'], 0, ' mm³')}"),
              L.get("new_sensitivity", "none"), f"sensitivity {_f(n['sensitivity'], 2)}"),
             ("False new lesions", "0", f"{n['false_new']}", L.get("false_new", "none"), ""),
-            ("Enlarging or shrinking calls on unchanged lesions", f"0 of {u['n']}", (f"{u['called_enlarging_or_shrinking']} ({_f((u['false_change_rate'] or 0) * 100, 1, ' %')}); "
-             f"{u['called_trend']} trend calls"), L.get("false_change_rate", "none"), ""),
-            ("Resolved calls on unchanged lesions", f"0 of {u['n']}", f"{u['called_resolved']}", L.get("false_resolved_rate", "none"), ""),
-            ("SEL candidates on unchanged lesions", "0", f"{s['candidates']} ({_f(s['per_baseline_lesion'], 2)} per baseline lesion)", L.get("sel_candidates_per_lesion", "none"), ""),
+            ("Enlarging or shrinking calls on baseline lesions", f"{u.get('truth_enlarging_or_shrinking', 0)} of {u.get('groups', u['n'])} truly beyond ±9 %/yr",
+             (f"{u['called_enlarging_or_shrinking']} false ({_f((u['false_change_rate'] or 0) * 100, 1, ' %')}), {u.get('missed_enlarging_or_shrinking', 0)} missed; "
+              f"class agreement {_f(u.get('class_agreement'), 2)}"), L.get("false_change_rate", "none"), ""),
+            ("Resolved calls on baseline lesions", f"0 of {u.get('groups', u['n'])}", f"{u['called_resolved']}", L.get("false_resolved_rate", "none"), ""),
+            ("SEL candidates on baseline lesions", "0", f"{s['candidates']} ({_f(s['per_baseline_lesion'], 2)} per baseline lesion)", L.get("sel_candidates_per_lesion", "none"), ""),
             ("Brain volume change", _f(b["injected_change_pct"], 2, " %"), f"{_f(b['jacobian_change_pct'], 2, ' %')} from the deformation field (recovery {_f(b['jacobian_recovery'], 2)})"
              + (f"; {_f(b['mask_ratio_change_pct'], 2, ' %')} from the mask ratio (recovery {_f(b['mask_ratio_recovery'], 2)})" if b.get("mask_ratio_change_pct") is not None else ""),
              L.get("atrophy_recovery", "none"), ""),
@@ -208,9 +210,9 @@ def _light_text(g: dict | None, what: str) -> str:
     if what == "new":
         return f"calibration: {n['reported']} of {n['injected']} injected found, {n['false_new']} false"
     if what == "change":
-        return f"calibration: {u['called_enlarging_or_shrinking']} of {u['n']} unchanged lesions called changed"
+        return f"calibration: {u['called_enlarging_or_shrinking']} of {u.get('groups', u['n'])} baseline lesions falsely called changed"
     if what == "resolved":
-        return f"calibration: {u['called_resolved']} of {u['n']} unchanged lesions called resolved"
+        return f"calibration: {u['called_resolved']} of {u.get('groups', u['n'])} baseline lesions falsely called resolved"
     if what == "sel":
         return f"calibration: {s['candidates']} candidates with no true expansion"
     if what == "atrophy":

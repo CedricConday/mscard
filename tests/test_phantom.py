@@ -75,7 +75,7 @@ def test_synthetic_truth_is_consistent(tmp_path):
     b1 = (np.asarray(nib.load(syn.brainmask).dataobj) > 0).sum()
     assert abs(b1 / b0 - 0.95) < 0.03
     # the cache returns the same thing without rewriting
-    syn2, truth2 = make_synthetic(s, tmp_path / "syn", sp)
+    _syn2, truth2 = make_synthetic(s, tmp_path / "syn", sp)
     assert truth2["seed"] == truth["seed"]
 
 

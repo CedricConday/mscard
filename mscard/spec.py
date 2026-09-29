@@ -130,9 +130,9 @@ def ensure_brainmask(s: Scan, out: Path, log: list[str] | None = None) -> Scan:
         try:
             brain = estimate_brain(t1, zooms, affine=img.affine)
             method = "bidsgate.estimate_brain (morphological, no atlas)"
-        except Exception as e:  # noqa: BLE001 - the fallback is stated in the record
-            brain = ndi.binary_fill_holes(nonzero)
-            method = f"nonzero support (bidsgate.estimate_brain failed: {e})"
+        except Exception as e:
+            raise ValueError(f"{s.subject}/{s.session}: no brain mask given and none could be estimated from the T1w "
+                             f"({e}); add a brainmask column to the manifest") from e
     out.parent.mkdir(parents=True, exist_ok=True)
     nib.save(nib.Nifti1Image(brain.astype(np.uint8), img.affine), out)
     rec = {"method": method, "volume_ml": float(brain.sum() * vox_ml), "source": str(s.t1)}

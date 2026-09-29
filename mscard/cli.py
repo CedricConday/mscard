@@ -34,7 +34,7 @@ def run_subject(subject: str, scans: list, out: Path, segmenter: str, params: Pa
     scans = ensure_masks(scans, segmenter, sub / "segment", params.threads, log)
     status = {"subject": subject}
     if do_measure:
-        m = measure(subject, scans, sub / "measure", params.threads, params.engine, log)
+        m = measure(subject, scans, sub / "measure", params.threads, params.engine, log, segmenter)
         status["measure"] = "ok"
         status["interval_years"] = m["interval_years"]
     if do_calibrate:
@@ -43,7 +43,7 @@ def run_subject(subject: str, scans: list, out: Path, segmenter: str, params: Pa
         syn, truth = make_synthetic(baseline, cal / "synthetic", params.synthetic, log)
         if segmenter == "lst-ai":
             syn = syn.with_mask(lst_ai(syn, cal / "lst-ai", threads=params.threads))
-        m2 = measure(subject, [baseline, syn], cal / "measure", params.threads, params.engine, log)
+        m2 = measure(subject, [baseline, syn], cal / "measure", params.threads, params.engine, log, segmenter)
         ref = given_baseline_mask if (segmenter == "lst-ai" and given_baseline_mask is not None) else None
         g = grade(baseline, syn, cal, m2, truth, segmenter, params.bands, params.threads, reference_mask=ref)
         status["calibrate"] = "ok"

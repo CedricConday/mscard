@@ -7,7 +7,6 @@ from pathlib import Path
 
 import nibabel as nib
 import numpy as np
-import pandas as pd
 
 from . import __version__
 from .spec import Scan, check_scan_grid, ensure_brainmask, to_lesiontrack
@@ -42,8 +41,8 @@ def brain_volume_change(jacobian: Path, brainmask_halfway: Path | None, baseline
         src = "nonzero baseline T1w"
     ok = np.isfinite(jac)
     inside = jac[brain & ok]
-    it = max(1, round(erode_mm / float(min(img.header.get_zooms()[:3]))))
-    core = ndi.binary_erosion(brain, iterations=it) & ok
+    depth = ndi.distance_transform_edt(brain, sampling=[float(z) for z in img.header.get_zooms()[:3]])
+    core = (depth > erode_mm) & ok
     inner = jac[core]
     full = float((inside.mean() - 1.0) * 100.0)
     er = float((inner.mean() - 1.0) * 100.0) if inner.size else float("nan")
@@ -59,8 +58,19 @@ def brain_volume_change(jacobian: Path, brainmask_halfway: Path | None, baseline
     }
 
 
+def _fingerprint(scans: list[Scan]) -> dict:
+    rec = {}
+    for s in scans:
+        for what in ("t1", "flair", "mask", "brainmask"):
+            q = getattr(s, what)
+            if q is not None:
+                st = Path(q).stat()
+                rec[f"{s.session}/{what}"] = {"path": str(q), "size": st.st_size, "mtime": int(st.st_mtime)}
+    return rec
+
+
 def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, engine: str = "greedy",
-            log: list[str] | None = None) -> dict:
+            log: list[str] | None = None, segmenter: str = "given") -> dict:
     """Run the longitudinal measurement for one subject and write ``out_dir/mscard.json``."""
     from lesiontrack.config import Params as LTParams
     from lesiontrack.config import RegParams
@@ -79,6 +89,14 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
     scans = [ensure_brainmask(s, out_dir / "brainmask" / f"{s.session}_brainmask.nii.gz", log) for s in scans]
     tps = [to_lesiontrack(s) for s in scans]
     lt_dir = out_dir / "lesiontrack"
+    # lesiontrack keys its registration cache on parameters, not inputs: drop it when an input changed.
+    fp_path, fp = out_dir / "inputs.json", _fingerprint(scans)
+    if fp_path.exists() and json.loads(fp_path.read_text()) != fp and (lt_dir / "reg").exists():
+        import shutil
+
+        shutil.rmtree(lt_dir / "reg")
+        log.append(f"{subject}: inputs changed since the last run; registration cache dropped")
+    fp_path.write_text(json.dumps(fp, indent=2))
     res = run_subject(subject, tps, lt_dir, LTParams(reg=RegParams(threads=threads, engine=engine)))
     for p in res.pairs:
         overview(lt_dir, p.follow_up, out_dir / f"overview_{p.follow_up}.png")
@@ -91,7 +109,9 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
     bvc["change_pct_per_year"] = bvc["change_pct"] / dt
     bvc["change_pct_per_year_eroded"] = bvc["change_pct_eroded"] / dt
     d = bvc["boundary_disagreement_pct"]
-    bvc["boundary_light"] = "none" if d is None else "green" if d <= 0.5 else "amber" if d <= 1.5 else "red"
+    bvc["boundary_disagreement_pct_per_year"] = None if d is None else d / dt
+    dy = bvc["boundary_disagreement_pct_per_year"]
+    bvc["boundary_light"] = "none" if dy is None else "green" if dy <= 0.5 else "amber" if dy <= 1.5 else "red"
 
     per_scan = []
     for s in scans:
@@ -106,17 +126,19 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
                     "note": "ratio of the two brain-mask volumes as given or estimated; independent of the warp, "
                             "but a mask-boundary measure, not a tissue measure"}
 
-    track = res.tracking[res.tracking["follow_up"] == pair.follow_up]
-    classes = track["class"].value_counts().to_dict()
-    lv0 = float(track["volume_baseline_mm3"].sum())
-    lv1 = float(track["volume_followup_mm3"].sum())
+    track = res.tracking[res.tracking["follow_up"] == pair.follow_up] if len(res.tracking) else res.tracking
+    empty = not len(track) or "class" not in track
+    classes = track["class"].value_counts().to_dict() if not empty else {}
+    lv0 = float(track["volume_baseline_mm3"].sum()) if not empty else 0.0
+    lv1 = float(track["volume_followup_mm3"].sum()) if not empty else 0.0
     cand = res.candidates
-    rows = track.sort_values("volume_followup_mm3", ascending=False).to_dict("records")
+    rows = track.sort_values("volume_followup_mm3", ascending=False).to_dict("records") if not empty else []
 
     rec = {
         "mscard_version": __version__,
         "lesiontrack_version": summary["lesiontrack_version"],
         "subject": subject,
+        "segmenter": segmenter,
         "baseline": baseline.session,
         "follow_up": last.session,
         "follow_ups": summary["follow_ups"],
@@ -137,8 +159,8 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
             "stable": int(classes.get("stable", 0)),
             "trend_up": int(classes.get("trend_up", 0)),
             "trend_down": int(classes.get("trend_down", 0)),
-            "groups": len(track),
-            "table": [{k: (None if (isinstance(v, float) and np.isnan(v)) else v) for k, v in r.items()} for r in rows],
+            "groups": len(rows),
+            "table": rows,
         },
         "sel": {
             "candidates": len(cand),
@@ -153,20 +175,10 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
         "params": summary["params"],
         "log": log,
     }
+    from .calibrate import scrub
+
+    rec = scrub(rec)
     with open(out_dir / "mscard.json", "w") as fh:
-        json.dump(rec, fh, indent=2, default=_json_default)
+        json.dump(rec, fh, indent=2, allow_nan=False)
     return rec
 
-
-def _json_default(o):
-    if isinstance(o, (np.integer,)):
-        return int(o)
-    if isinstance(o, (np.floating,)):
-        return None if np.isnan(o) else float(o)
-    if isinstance(o, (np.bool_,)):
-        return bool(o)
-    if isinstance(o, Path):
-        return str(o)
-    if isinstance(o, pd.Timestamp):
-        return str(o)
-    raise TypeError(f"not serialisable: {type(o)}")

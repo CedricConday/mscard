@@ -65,7 +65,10 @@ def render(subject_dir: Path) -> Path:
     m2 = _load(subject_dir / "calibration" / "measure" / "mscard.json")
     failed = subject_dir / "FAILED.txt"
     subject = subject_dir.name
+    if not (g and t):
+        g = t = None  # a grade without its truth (or the reverse) is not shown
     L = (g or {}).get("lights", {})
+    segmenter = (m or g or {}).get("segmenter", "given")
     parts = [(f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
               f"<title>mscard {html.escape(subject)}</title><style>{CSS}</style></head><body>")]
     parts.append(f"<h1>mscard report: {html.escape(subject)}</h1>")
@@ -75,7 +78,7 @@ def render(subject_dir: Path) -> Path:
                      f" to follow-up {html.escape(s1['session'])}{(' (' + html.escape(s1['date']) + ')') if s1['date'] else ''}, "
                      f"interval {_f(m['interval_years'], 2)} years"
                      f"{', ' + html.escape(s0['scanner']) if s0.get('scanner') else ''}. "
-                     f"Lesion masks: {'supplied' if (g or {}).get('segmenter', 'given') == 'given' else 'LST-AI v2, run by mscard'}. "
+                     f"Lesion masks: {'supplied' if segmenter == 'given' else 'LST-AI v2, run by mscard'}. "
                      f"mscard {html.escape(m['mscard_version'])}, lesiontrack {html.escape(m['lesiontrack_version'])}, "
                      f"generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}.</div>")
     if failed.exists():
@@ -90,7 +93,8 @@ def render(subject_dir: Path) -> Path:
         les, br = m["lesions"], m["brain"]
         parts.append("<h2>Findings</h2><div class='cards'>")
         parts.append(_card(_i(les["new"]), "new lesions" + (f" (+{les['adjacent_fragment']} adjacent fragments)" if les["adjacent_fragment"] else ""),
-                           L.get("new_sensitivity", "none"), _light_text(g, "new")))
+                           L.get("new_sensitivity", "none"), _light_text(g, "new") if (g or {}).get("detection_graded") else
+                           ("masks supplied: detection is the annotator's, not graded" if g else "not graded")))
         parts.append(_card(_i(les["enlarging"]), "enlarging lesions", L.get("false_change_rate", "none"), _light_text(g, "change")))
         parts.append(_card(_i(les["shrinking"]), "shrinking lesions", L.get("false_change_rate", "none"), _light_text(g, "change")))
         parts.append(_card(_i(les["resolved"]), "resolved lesions", L.get("false_resolved_rate", "none"), _light_text(g, "resolved")))
@@ -100,15 +104,16 @@ def render(subject_dir: Path) -> Path:
         bl = br["jacobian"].get("boundary_light", "none")
         al = L.get("atrophy_recovery", "none")
         worst = max((al, bl), key=lambda x: ["none", "green", "amber", "red"].index(x))
+        rim = "" if bl in ("green", "none") else f"; rim-dominated: {_f(br['jacobian'].get('change_pct_per_year_eroded'), 2, ' %/yr')} with the mask eroded {_f(br['jacobian'].get('erode_mm'), 0, ' mm')}"
         parts.append(_card(_f(br["jacobian"]["change_pct_per_year"], 2, " %/yr"), "brain volume change (deformation field)",
-                           worst, _light_text(g, "atrophy") + f"; boundary check: {_f(br['jacobian'].get('change_pct_per_year_eroded'), 2, ' %/yr')} with the mask eroded {_f(br['jacobian'].get('erode_mm'), 0, ' mm')}"))
+                           worst, _light_text(g, "atrophy") + rim))
         if br.get("mask_ratio"):
             parts.append(_card(_f(br["mask_ratio"]["change_pct_per_year"], 2, " %/yr"), "brain volume change (mask ratio)", "none", "not graded"))
         parts.append("</div>")
         parts.append(f"<p class='small'>Brain volume change is the mean Jacobian determinant over the baseline brain mask. Its boundary check repeats the mean with the mask eroded "
                      f"{_f(br['jacobian'].get('erode_mm'), 0)} mm: {_f(br['jacobian'].get('change_pct'), 2, ' %')} full against {_f(br['jacobian'].get('change_pct_eroded'), 2, ' %')} eroded over the interval "
-                     f"(disagreement {_f(br['jacobian'].get('boundary_disagreement_pct'), 2, ' points')}: green ≤ 0.5, amber ≤ 1.5, red beyond). A change that lives only in the outer rim is a mask "
-                     f"difference between the two visits, which the calibration cannot see because a synthetic follow-up is stripped identically.</p>")
+                     f"(disagreement {_f(br['jacobian'].get('boundary_disagreement_pct_per_year'), 2, ' points per year')}: green ≤ 0.5, amber ≤ 1.5, red beyond). A change confined to the outer rim is "
+                     f"rim-dominated: a mask difference between the two visits, or cortical change the eroded mask leaves out; the calibration cannot separate the two because a synthetic follow-up is stripped identically.</p>")
         parts.append(f"<p class='small'>Baseline: {_i(les['baseline_count'])} lesions, {_f(les['baseline_volume_mm3'] / 1000, 2)} ml. "
                      f"Classes follow Vanden Bulcke et al. 2025 bands: enlarging or shrinking beyond ±9 %/yr, stable within ±4 %/yr, "
                      f"trend between ({_i(les['trend_up'])} trend up, {_i(les['trend_down'])} trend down, {_i(les['stable'])} stable). "
@@ -116,9 +121,10 @@ def render(subject_dir: Path) -> Path:
 
     if g and t:
         parts.append("<h2>How this report was graded</h2>")
+        vols = [x["volume_mm3"] for x in t["new_lesions"]]
         parts.append(f"<p>The baseline scan of this subject was turned into a synthetic follow-up one modelled year later: the whole brain "
                      f"contracted by <b>{_f(t['injected_brain_change_pct'], 1, ' %')}</b>, <b>{t['n_new']} new lesions</b> "
-                     f"({_f(min(x['volume_mm3'] for x in t['new_lesions']), 0)} to {_f(max(x['volume_mm3'] for x in t['new_lesions']), 0)} mm³) "
+                     f"({_f(min(vols), 0) if vols else '–'} to {_f(max(vols), 0) if vols else '–'} mm³) "
                      f"placed at least {t['params']['exclusion_mm']:.0f} mm from every existing lesion, a rigid repositioning "
                      f"({', '.join(_f(v, 2) for v in t['rigid']['rot_deg'])} degrees; {', '.join(_f(v, 2) for v in t['rigid']['trans_vox'])} voxels), "
                      f"gains {', '.join(_f(v, 2) for v in t['gains'])} and {t['params']['noise_frac'] * 100:.0f} % noise. "
@@ -127,22 +133,22 @@ def render(subject_dir: Path) -> Path:
         rows = [
             ("New lesions", f"{n['injected']} injected", (f"{n['reported']} reported ({n['reported_as_new']} new, {n['reported_as_fragment']} adjacent fragment); "
              f"{n['false_new']} false new, {n['false_fragment']} false fragments; largest missed {_f(n['largest_missed_mm3'], 0, ' mm³')}"),
-             L["new_sensitivity"], f"sensitivity {_f(n['sensitivity'], 2)}"),
-            ("False new lesions", "0", f"{n['false_new']}", L["false_new"], ""),
+             L.get("new_sensitivity", "none"), f"sensitivity {_f(n['sensitivity'], 2)}"),
+            ("False new lesions", "0", f"{n['false_new']}", L.get("false_new", "none"), ""),
             ("Enlarging or shrinking calls on unchanged lesions", f"0 of {u['n']}", (f"{u['called_enlarging_or_shrinking']} ({_f((u['false_change_rate'] or 0) * 100, 1, ' %')}); "
-             f"{u['called_trend']} trend calls"), L["false_change_rate"], ""),
-            ("Resolved calls on unchanged lesions", f"0 of {u['n']}", f"{u['called_resolved']}", L["false_resolved_rate"], ""),
-            ("SEL candidates on unchanged lesions", "0", f"{s['candidates']} ({_f(s['per_baseline_lesion'], 2)} per baseline lesion)", L["sel_candidates_per_lesion"], ""),
+             f"{u['called_trend']} trend calls"), L.get("false_change_rate", "none"), ""),
+            ("Resolved calls on unchanged lesions", f"0 of {u['n']}", f"{u['called_resolved']}", L.get("false_resolved_rate", "none"), ""),
+            ("SEL candidates on unchanged lesions", "0", f"{s['candidates']} ({_f(s['per_baseline_lesion'], 2)} per baseline lesion)", L.get("sel_candidates_per_lesion", "none"), ""),
             ("Brain volume change", _f(b["injected_change_pct"], 2, " %"), f"{_f(b['jacobian_change_pct'], 2, ' %')} from the deformation field (recovery {_f(b['jacobian_recovery'], 2)})"
              + (f"; {_f(b['mask_ratio_change_pct'], 2, ' %')} from the mask ratio (recovery {_f(b['mask_ratio_recovery'], 2)})" if b.get("mask_ratio_change_pct") is not None else ""),
-             L["atrophy_recovery"], ""),
+             L.get("atrophy_recovery", "none"), ""),
         ]
         if g.get("segmentation"):
             sg = g["segmentation"]
             rows.append(("Segmentation of the injected lesions (LST-AI)", f"{sg['lesions']} lesions", f"{sg['detected']} found, Dice {_f(sg['dice'], 2)}, "
                          f"{sg['false_positive_components']} false-positive components ({_f(sg['false_positive_volume_mm3'], 0, ' mm³')})"
                          + (f"; baseline Dice against the supplied mask {_f(sg.get('baseline_reference_dice'), 2)}" if sg.get("baseline_reference_dice") is not None else ""),
-                         L["seg_sensitivity"], f"sensitivity {_f(sg['sensitivity'], 2)}"))
+                         L.get("seg_sensitivity", "none"), f"sensitivity {_f(sg['sensitivity'], 2)}"))
         parts.append("<table><tr><th>Report line</th><th>Truth</th><th>Pipeline reported</th><th>Reading</th></tr>")
         for name, truth, got, light, extra in rows:
             parts.append(f"<tr><td>{html.escape(name)}</td><td>{html.escape(truth)}</td><td>{html.escape(got)}</td>"
@@ -157,7 +163,7 @@ def render(subject_dir: Path) -> Path:
                      f"false change rate ≤ {bands.get('false_change_rate_max', ['?'])[0]}, false resolved ≤ {bands.get('false_resolved_rate_max', ['?'])[0]}, "
                      f"SEL candidates per lesion ≤ {bands.get('sel_candidates_per_lesion_max', ['?'])[0]}; amber up to the second value of each.</p>")
     elif m:
-        parts.append("<h2>How this report was graded</h2><p>No calibration was run for this subject (<code>--no-calibrate</code>), so no badge is coloured.</p>")
+        parts.append("<h2>How this report was graded</h2><p>No calibration is available for this subject, so no badge is coloured.</p>")
 
     if m:
         parts.append("<h2>Images</h2>")

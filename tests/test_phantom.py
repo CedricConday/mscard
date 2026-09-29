@@ -89,3 +89,9 @@ def test_lights():
     assert light(1.4, *b.atrophy_recovery_range, "range") == "amber"
     assert light(None, *b.atrophy_recovery_range, "range") == "none"
     assert light(float("nan"), *b.false_new_max, "max") == "none"
+
+
+def test_ids_parse_floats_and_lists():
+    from mscard.calibrate import _ids
+
+    assert _ids("1.0") == [1] and _ids("1,3") == [1, 3] and _ids(float("nan")) == [] and _ids(None) == []

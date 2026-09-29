@@ -148,7 +148,8 @@ def _scan(baseline: Scan, out_dir: Path, sp: SyntheticParams) -> Scan:
 def _ids(v) -> list[int]:
     if v is None or (isinstance(v, float) and np.isnan(v)):
         return []
-    return [int(x) for x in str(v).replace(";", ",").split(",") if str(x).strip()]
+    # pandas reads an all-single-id column as float ("1.0"); a multi-id cell is "1,3"
+    return [int(float(x)) for x in str(v).replace(";", ",").split(",") if str(x).strip()]
 
 
 def light(value, green, amber, kind: str) -> str:
@@ -178,7 +179,7 @@ def grade(baseline: Scan, syn: Scan, cal_dir: Path, measurement: dict, truth: di
              cal_dir / "reslice.log")
     tn = np.asarray(nib.load(truth_half).dataobj).astype(np.int32)
     fl = np.asarray(nib.load(lt / f"lesion_labels_{fu}.nii.gz").dataobj).astype(np.int32)
-    table = pd.read_csv(lt / "lesion_tracking.tsv", sep="\t")
+    table = pd.read_csv(lt / "lesion_tracking.tsv", sep="\t", dtype={"baseline_ids": str, "followup_ids": str, "follow_up": str})
     table = table[table["follow_up"].astype(str) == fu]
     new_ids = [i for _, r in table[table["class"] == "new"].iterrows() for i in _ids(r["followup_ids"])]
     frag_ids = [i for _, r in table[table["class"] == "adjacent_fragment"].iterrows() for i in _ids(r["followup_ids"])]

@@ -18,28 +18,44 @@ def _vol_mm3(path: Path) -> float:
     return float((np.asarray(img.dataobj) > 0).sum() * np.prod(img.header.get_zooms()[:3]))
 
 
-def brain_volume_change(jacobian: Path, brainmask_halfway: Path | None, baseline_t1_halfway: Path) -> dict:
+def brain_volume_change(jacobian: Path, brainmask_halfway: Path | None, baseline_t1_halfway: Path,
+                        erode_mm: float = 6.0) -> dict:
     """Whole-brain volume change from the deformation field: mean det J over the baseline brain.
 
     det J > 1 where the follow-up is locally larger than the baseline, so
     (mean - 1) * 100 is the percent change of brain volume from baseline to
-    follow-up, the same quantity lesiontrack integrates inside lesions.
+    follow-up, the same quantity lesiontrack integrates inside lesions. The
+    same mean over the brain mask eroded by ``erode_mm`` is a self-check the
+    calibration cannot provide: two visits stripped differently move the
+    boundary, and a change that lives only in the outer rim is a mask
+    difference, not tissue.
     """
-    jac = np.asarray(nib.load(jacobian).dataobj, dtype=np.float32)
+    from scipy import ndimage as ndi
+
+    img = nib.load(jacobian)
+    jac = np.asarray(img.dataobj, dtype=np.float32)
     if brainmask_halfway is not None and Path(brainmask_halfway).exists():
         brain = np.asarray(nib.load(brainmask_halfway).dataobj) > 0
         src = "baseline brain mask"
     else:
         brain = np.asarray(nib.load(baseline_t1_halfway).dataobj) > 0
         src = "nonzero baseline T1w"
-    inside = jac[brain]
-    inside = inside[np.isfinite(inside)]
+    ok = np.isfinite(jac)
+    inside = jac[brain & ok]
+    it = max(1, round(erode_mm / float(min(img.header.get_zooms()[:3]))))
+    core = ndi.binary_erosion(brain, iterations=it) & ok
+    inner = jac[core]
+    full = float((inside.mean() - 1.0) * 100.0)
+    er = float((inner.mean() - 1.0) * 100.0) if inner.size else float("nan")
     return {
         "mean_jacobian": float(inside.mean()),
-        "change_pct": float((inside.mean() - 1.0) * 100.0),
+        "change_pct": full,
         "median_jacobian": float(np.median(inside)),
         "brain_voxels": int(brain.sum()),
         "mask_source": src,
+        "erode_mm": erode_mm,
+        "change_pct_eroded": er,
+        "boundary_disagreement_pct": abs(full - er) if np.isfinite(er) else None,
     }
 
 
@@ -49,7 +65,8 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
     from lesiontrack.config import Params as LTParams
     from lesiontrack.config import RegParams
     from lesiontrack.pipeline import run_subject
-    from lesiontrack.report import overview
+
+    from .figures import overview
 
     log = log if log is not None else []
     out_dir = Path(out_dir)
@@ -64,7 +81,7 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
     lt_dir = out_dir / "lesiontrack"
     res = run_subject(subject, tps, lt_dir, LTParams(reg=RegParams(threads=threads, engine=engine)))
     for p in res.pairs:
-        overview(lt_dir, p.follow_up)
+        overview(lt_dir, p.follow_up, out_dir / f"overview_{p.follow_up}.png")
     summary = json.loads((lt_dir / "summary.json").read_text())
 
     baseline, last = scans[0], scans[-1]
@@ -72,6 +89,9 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
     bvc = brain_volume_change(pair.jacobian, pair.baseline_brainmask, pair.baseline_t1)
     dt = pair.dt_years
     bvc["change_pct_per_year"] = bvc["change_pct"] / dt
+    bvc["change_pct_per_year_eroded"] = bvc["change_pct_eroded"] / dt
+    d = bvc["boundary_disagreement_pct"]
+    bvc["boundary_light"] = "none" if d is None else "green" if d <= 0.5 else "amber" if d <= 1.5 else "red"
 
     per_scan = []
     for s in scans:
@@ -129,7 +149,7 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
             "table": cand.to_dict("records") if len(cand) else [],
         },
         "brain": {"jacobian": bvc, "mask_ratio": mask_bvc},
-        "images": {"overview": str(lt_dir / f"overview_{pair.follow_up}.png")},
+        "images": {"overview": str(out_dir / f"overview_{pair.follow_up}.png")},
         "params": summary["params"],
         "log": log,
     }

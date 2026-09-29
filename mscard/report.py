@@ -97,11 +97,18 @@ def render(subject_dir: Path) -> Path:
         parts.append(_card(_f(les["volume_change_pct_per_year"], 1, " %/yr"), f"lesion volume change ({_f(les['baseline_volume_mm3'] / 1000, 2)} to {_f(les['followup_volume_mm3'] / 1000, 2)} ml)",
                            L.get("false_change_rate", "none"), _light_text(g, "change")))
         parts.append(_card(_i(m["sel"]["candidates"]), "slowly expanding lesion candidates", L.get("sel_candidates_per_lesion", "none"), _light_text(g, "sel")))
+        bl = br["jacobian"].get("boundary_light", "none")
+        al = L.get("atrophy_recovery", "none")
+        worst = max((al, bl), key=lambda x: ["none", "green", "amber", "red"].index(x))
         parts.append(_card(_f(br["jacobian"]["change_pct_per_year"], 2, " %/yr"), "brain volume change (deformation field)",
-                           L.get("atrophy_recovery", "none"), _light_text(g, "atrophy")))
+                           worst, _light_text(g, "atrophy") + f"; boundary check: {_f(br['jacobian'].get('change_pct_per_year_eroded'), 2, ' %/yr')} with the mask eroded {_f(br['jacobian'].get('erode_mm'), 0, ' mm')}"))
         if br.get("mask_ratio"):
             parts.append(_card(_f(br["mask_ratio"]["change_pct_per_year"], 2, " %/yr"), "brain volume change (mask ratio)", "none", "not graded"))
         parts.append("</div>")
+        parts.append(f"<p class='small'>Brain volume change is the mean Jacobian determinant over the baseline brain mask. Its boundary check repeats the mean with the mask eroded "
+                     f"{_f(br['jacobian'].get('erode_mm'), 0)} mm: {_f(br['jacobian'].get('change_pct'), 2, ' %')} full against {_f(br['jacobian'].get('change_pct_eroded'), 2, ' %')} eroded over the interval "
+                     f"(disagreement {_f(br['jacobian'].get('boundary_disagreement_pct'), 2, ' points')}: green ≤ 0.5, amber ≤ 1.5, red beyond). A change that lives only in the outer rim is a mask "
+                     f"difference between the two visits, which the calibration cannot see because a synthetic follow-up is stripped identically.</p>")
         parts.append(f"<p class='small'>Baseline: {_i(les['baseline_count'])} lesions, {_f(les['baseline_volume_mm3'] / 1000, 2)} ml. "
                      f"Classes follow Vanden Bulcke et al. 2025 bands: enlarging or shrinking beyond ±9 %/yr, stable within ±4 %/yr, "
                      f"trend between ({_i(les['trend_up'])} trend up, {_i(les['trend_down'])} trend down, {_i(les['stable'])} stable). "
@@ -219,7 +226,8 @@ def gallery(out: Path) -> Path:
     parts = [(f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
              f"<title>mscard gallery</title><style>{CSS}</style></head><body><h1>mscard: {len(rows)} subjects</h1>"
              "<div class='box'>Research software, not a medical device. Each row is one longitudinal pair; the dots are the calibration lights "
-             "(new-lesion sensitivity, false new, false change on unchanged lesions, false resolved, SEL candidates on unchanged lesions, brain volume recovery).</div>"
+             "(new-lesion sensitivity, false new, false change on unchanged lesions, false resolved, SEL candidates on unchanged lesions, brain volume recovery) "
+             "and the seventh dot is the real pair's own boundary check on brain volume (full mask against eroded mask).</div>"
              "<table><tr><th>Subject</th><th class='num'>Years</th><th class='num'>Baseline lesions</th><th class='num'>New</th><th class='num'>Enlarging</th>"
              "<th class='num'>Resolved</th><th class='num'>SEL cand.</th><th class='num'>Lesion vol %/yr</th><th class='num'>Brain vol %/yr</th>"
              "<th>Calibration</th><th class='num'>New found</th><th class='num'>Brain recovery</th></tr>")]
@@ -228,6 +236,7 @@ def gallery(out: Path) -> Path:
         br = (m or {}).get("brain", {}).get("jacobian", {})
         L = (g or {}).get("lights", {})
         dots = "".join(_dot(L.get(k, "none")) for k in ("new_sensitivity", "false_new", "false_change_rate", "false_resolved_rate", "sel_candidates_per_lesion", "atrophy_recovery"))
+        dots += _dot(br.get("boundary_light", "none"))
         n = (g or {}).get("new_lesions", {})
         parts.append(f"<tr><td><a href='{html.escape(name)}/report.html'>{html.escape(name)}</a>{' FAILED' if failed else ''}</td>"
                      f"<td class='num'>{_f((m or {}).get('interval_years'), 2)}</td><td class='num'>{_i(les.get('baseline_count'))}</td>"

@@ -176,6 +176,25 @@ What the numbers say, and what they do not:
   candidate stage at this registration; the definite/possible split is a cohort ranking on top of
   it. This is the finding a reader of any SEL count should have next to it.
 
+### LST-AI mode (mscard runs the segmenter): two subjects, 2026-09-29
+
+Same subjects, same synthetic follow-ups, but the lesion masks of every scan (real and synthetic)
+come from LST-AI v2.0.0rc1 (CPU, fast mode), so detection is graded too. Reports: P2 and P20 in the
+gallery under `lstai/`.
+
+| Subject | Injected found by LST-AI | False-positive components | Dice on injected | Baseline Dice vs expert mask | Reported new | False new | Baseline lesions falsely called changed | Falsely resolved | Atrophy recovery |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| P2 | 8/12 | 7 | 0.52 | 0.73 | 8/12 | 3 | 6/15 | 0 | 1.07 |
+| P20 | 2/12 | 2 | 0.03 | 0.15 | 2/12 | 2 | 0/1 | 0 | 1.17 |
+
+This is the page grading itself. With supplied masks the tracking lines were green; with LST-AI
+the new-lesion badge is red on both subjects, the false-change badge is red on P2 (segmentation
+differences between two visits read as lesion change), and on P20 LST-AI agrees with the expert
+mask at Dice 0.15 at baseline, so nothing on that page should be read at face value, and the page
+says so. The synthetic lesions are ellipsoids with a fixed FLAIR contrast, so this is a floor for
+the segmenter, not its accuracy on real lesions. A third subject (P3) was stopped before its
+synthetic scan.
+
 ## Citations
 
 * Elliott C, et al. Slowly expanding/evolving lesions as a magnetic resonance imaging marker of chronic active multiple sclerosis lesions. *Mult Scler* 2019.

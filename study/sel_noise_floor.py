@@ -4,14 +4,18 @@ Uses each subject's calibration synthetic (every lesion unchanged). Registration
 the interval only rescales the Jacobian to %/yr, so it needs no new registration.
 Output: study/sel_noise_floor.tsv (one row per subject x setting x interval).
 """
-import json, sys, time
+import time
 from dataclasses import replace
 from pathlib import Path
-import numpy as np, nibabel as nib, pandas as pd
-from lesiontrack.config import RegParams, SELParams
-from lesiontrack.registration import Timepoint, register_pair, jacobian_pct_per_year
+
+import nibabel as nib
+import numpy as np
+import pandas as pd
 from lesiontrack.candidates import sel_candidates
+from lesiontrack.config import RegParams, SELParams
+from lesiontrack.registration import Timepoint, jacobian_pct_per_year, register_pair
 from lesiontrack.tracking import label_lesions
+
 from mscard.spec import read_manifest
 
 ROOT = Path(__file__).resolve().parents[1]

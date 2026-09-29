@@ -96,15 +96,29 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
     #    baseline lesion, so each injected lesion is truly new rather than an enlargement.
     tmp = out_dir / "tmp"
     tmp.mkdir(parents=True, exist_ok=True)
-    it = round(sp.exclusion_mm / min(zooms))
-    excl = ndi.binary_dilation(maska, structure=ndi.generate_binary_structure(3, 2), iterations=max(1, it))
-    place = _save((braina & ~excl).astype(np.uint8), img, tmp / "placement.nii.gz")
     _save(t1a, img, tmp / "T1w_atrophied.nii.gz")
     _save(fla, img, tmp / "FLAIR_atrophied.nii.gz")
     new_json = out_dir / "newlesions_truth.json"
     spec = LesionSpec(n=sp.n_new, seed=int(rng.integers(0, 2**31 - 1)))
-    inject(tmp / "T1w_atrophied.nii.gz", tmp / "FLAIR_atrophied.nii.gz", tmp / "T1w_injected.nii.gz",
-           tmp / "FLAIR_injected.nii.gz", tmp / "newlesions.nii.gz", new_json, spec, mask_path=place)
+    exclusion_used = None
+    # A heavily lesioned brain may leave too little white matter once a margin around every lesion is
+    # excluded; step the margin down rather than give up, and record the margin that was used.
+    for margin in sorted({sp.exclusion_mm, 4.0, 2.0}, reverse=True):
+        if margin > sp.exclusion_mm:
+            continue
+        it = max(1, round(margin / min(zooms)))
+        excl = ndi.binary_dilation(maska, structure=ndi.generate_binary_structure(3, 2), iterations=it)
+        _save((braina & ~excl).astype(np.uint8), img, tmp / "placement.nii.gz")
+        try:
+            inject(tmp / "T1w_atrophied.nii.gz", tmp / "FLAIR_atrophied.nii.gz", tmp / "T1w_injected.nii.gz",
+                   tmp / "FLAIR_injected.nii.gz", tmp / "newlesions.nii.gz", new_json, spec, mask_path=tmp / "placement.nii.gz")
+            exclusion_used = margin
+            break
+        except ValueError as e:
+            if log is not None:
+                log.append(f"{baseline.subject}: lesion placement failed with a {margin:g} mm margin ({e}); trying smaller")
+    if exclusion_used is None:
+        raise ValueError(f"{baseline.subject}: no room to place new lesions even with a 2 mm margin")
     t1b = np.asarray(nib.load(tmp / "T1w_injected.nii.gz").dataobj, dtype=np.float32)
     flb = np.asarray(nib.load(tmp / "FLAIR_injected.nii.gz").dataobj, dtype=np.float32)
     newb = np.asarray(nib.load(tmp / "newlesions.nii.gz").dataobj).astype(np.int32)
@@ -150,6 +164,7 @@ def make_synthetic(baseline: Scan, out_dir: Path, sp: SyntheticParams, log: list
         "volume_factor": sp.volume_factor,
         "injected_brain_change_pct": (sp.volume_factor - 1) * 100,
         "n_new": sp.n_new,
+        "exclusion_mm_used": exclusion_used,
         "new_lesions": new_truth["lesions"],
         "new_lesion_volume_mm3": new_truth["total_volume_mm3"],
         "baseline_lesion_count_truth": int(lab_bl.max()),

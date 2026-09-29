@@ -1,0 +1,11 @@
+__pycache__/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+sourcedata/
+derivatives/
+work/
+*.nii
+*.nii.gz

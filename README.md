@@ -143,16 +143,17 @@ in the gallery: https://cedricconday.github.io/mscard/ (one self-contained page 
 | P28 | 0.97 | 8 | 14 | 1 | 3 | 2 | 2 | 25.2 | -8.18 (-6.25) | red | 12/12 | 0 | 0/8 | 0.00 | 1.18 |
 | P31 | 1.48 | 28 | 7 | 15 | 4 | 2 | 12 | 34.8 | -0.58 (0.36) | amber | 12/12 | 0 | 0/24 | 0.85 | 1.20 |
 | P33 | 2.42 | 41 | 2 | 3 | 8 | 21 | 9 | -16.3 | -0.81 (-0.54) | green | 12/12 | 0 | 0/37 | 1.00 | 1.31 |
-| P50 | 1.00 | 47 | 8 | 14 | 10 | 13 | 35 | 298.5 | -0.38 (0.39) | amber | –/– | – | –/– | – | – |
+| P50 | 1.00 | 47 | 8 | 14 | 10 | 13 | 36 | 298.5 | -0.37 (0.42) | amber | 12/12 | 0 | 0/43 | 1.11 | 1.46 |
 | P51 | 3.01 | 43 | 18 | 6 | 2 | 26 | 33 | 9.5 | -1.29 (-1.72) | green | 12/12 | 0 | 0/40 | 1.70 | 1.34 |
 | P52 | 0.16 | 26 | 3 | 5 | 4 | 15 | 24 | -87.5 | 29.48 (16.12) | red | 12/12 | 0 | 0/25 | 1.00 | 1.25 |
 | P53 | 1.17 | 22 | 21 | 0 | 1 | 21 | 21 | -7.6 | -0.97 (-1.41) | green | 12/12 | 0 | 0/21 | 1.14 | 1.13 |
 
-Subjects: 24. Injected new lesions reported: 276 of 276; false new: 0. Unchanged lesions called enlarging or shrinking: 1 of 551; called resolved: 0. SEL candidates per unchanged lesion: median 1.07 (range 0.00 to 7.21). Atrophy recovery: median 1.18 (range 1.07 to 1.34). Boundary check on the real pairs: {'green': 11, 'amber': 9, 'red': 4}.
+Subjects: 24. Injected new lesions reported: 288 of 288; false new: 0. Unchanged lesions called enlarging or shrinking: 1 of 594; called resolved: 0. SEL candidates per unchanged lesion: median 1.09 (range 0.00 to 7.21). Atrophy recovery: median 1.18 (range 1.07 to 1.46). Boundary check on the real pairs: {'green': 11, 'amber': 9, 'red': 4}.
 
-Two of 26 longitudinal subjects are not in the table: P49's released follow-up T1w is empty
-(lesiontrack refuses it; reported upstream as MSLesSeg-2024 issue #1) and P50's baseline gives
-bidsgate too little white matter to place lesions after the 6 mm exclusion around its existing ones.
+P49 is not in the table: its released follow-up T1w is empty (lesiontrack refuses it; reported upstream
+as MSLesSeg-2024 issue #1). P50's baseline leaves too little white matter for lesion placement with a 6 mm
+margin around its existing lesions; since 2026-09-30 the calibration steps the margin down and records it
+(P50: 4 mm).
 
 What the numbers say, and what they do not:
 
@@ -161,17 +162,17 @@ What the numbers say, and what they do not:
   lesiontrack's tracking calls an injected lesion "new" rather than a fragment or a merge, and
   nothing about detection. That is why the badge is grey. The LST-AI mode grades detection; its
   numbers follow below as they land.
-* **Enlarging, shrinking, resolved: 1 false call in 551 lesions, 0 false resolved.** Each baseline
+* **Enlarging, shrinking, resolved: 1 false call in 594 lesions, 0 false resolved.** Each baseline
   lesion is judged against its own truth volume in the synthetic mask, with lesiontrack's ±9 %/yr
   and ±4 %/yr bands. Registration and tracking do not invent change on a one-year synthetic
   interval. The real pairs still show many resolved and shrinking lesions (P1: 7 resolved of 18);
   the calibration cannot tell annotation drift between visits from biology, and the page says so.
-* **Brain volume change: recovery 1.07 to 1.34, median 1.18.** The deformation field over-reads a
+* **Brain volume change: recovery 1.07 to 1.46, median 1.18.** The deformation field over-reads a
   uniform 2 % contraction by about a fifth, consistently (lesiontrack's lesion-expansion backtest
   gave 1.16). On the real pairs the boundary check is green for 11, amber for 9, red for 4: where it
   is red, the full-mask and eroded-mask numbers disagree by more than 1.5 points per year and the
   page calls the number rim-dominated.
-* **SEL candidates: red for 17 of 23.** With no lesion expanding, the Elliott et al. 2019 candidate
+* **SEL candidates: red for 18 of 24.** With no lesion expanding, the Elliott et al. 2019 candidate
   rule still marks a median 1.07 candidates per baseline lesion. That is the noise floor of the
   candidate stage at this registration; the definite/possible split is a cohort ranking on top of
   it. This is the finding a reader of any SEL count should have next to it.

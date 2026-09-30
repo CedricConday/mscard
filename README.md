@@ -177,6 +177,23 @@ What the numbers say, and what they do not:
   candidate stage at this registration; the definite/possible split is a cohort ranking on top of
   it. This is the finding a reader of any SEL count should have next to it.
 
+### With `--reg-profile smooth` (2026-09-30)
+
+The SEL studies (`docs/SEL_NOISE_FLOOR.md`) found that a smoother deformation field keeps every injected
+expansion detected and cuts false SEL candidates. Rerunning the whole cohort with it (`derivatives/mslesseg-smooth`,
+same 24 patients, same calibration):
+
+| | default | smooth |
+|---|---:|---:|
+| SEL candidates per unchanged lesion, median | 1.09 | 0.07 |
+| SEL badge green / amber / red | 2 / 4 / 18 | 17 / 4 / 3 |
+| unchanged lesions falsely called enlarging or shrinking | 1 | 0 |
+| brain volume recovery, median | 1.18 | 1.23 |
+
+The SEL line goes from red on most patients to green on most. The price, measured in the sensitivity study, is
+that the smooth field under-reads the size of a real expansion by about a sixth, so use it for counting SEL
+candidates and the default for measuring expansion rates.
+
 ### LST-AI mode (mscard runs the segmenter): two subjects, 2026-09-29
 
 Same subjects, same synthetic follow-ups, but the lesion masks of every scan (real and synthetic)

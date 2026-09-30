@@ -46,6 +46,7 @@ class Params:
     bands: Bands = field(default_factory=Bands)
     threads: int = 4
     engine: str = "greedy"
+    reg_profile: str = "default"
 
 
 LST_AI_IMAGE = "jqmcginnis/lst-ai:v2.0.0rc1-cpu"

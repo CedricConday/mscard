@@ -17,7 +17,7 @@ def _params(a: argparse.Namespace) -> Params:
     over = {k: getattr(a, k) for k in ("volume_factor", "n_new", "seed", "dt_years") if getattr(a, k, None) is not None}
     if over:
         sp = SyntheticParams(**{**sp.__dict__, **over})
-    return Params(synthetic=sp, bands=Bands(), threads=a.threads, engine=a.engine)
+    return Params(synthetic=sp, bands=Bands(), threads=a.threads, engine=a.engine, reg_profile=a.reg_profile)
 
 
 def run_subject(subject: str, scans: list, out: Path, segmenter: str, params: Params, do_measure: bool,
@@ -34,7 +34,7 @@ def run_subject(subject: str, scans: list, out: Path, segmenter: str, params: Pa
     scans = ensure_masks(scans, segmenter, sub / "segment", params.threads, log)
     status = {"subject": subject}
     if do_measure:
-        m = measure(subject, scans, sub / "measure", params.threads, params.engine, log, segmenter)
+        m = measure(subject, scans, sub / "measure", params.threads, params.engine, log, segmenter, params.reg_profile)
         status["measure"] = "ok"
         status["interval_years"] = m["interval_years"]
     if do_calibrate:
@@ -43,7 +43,7 @@ def run_subject(subject: str, scans: list, out: Path, segmenter: str, params: Pa
         syn, truth = make_synthetic(baseline, cal / "synthetic", params.synthetic, log)
         if segmenter == "lst-ai":
             syn = syn.with_mask(lst_ai(syn, cal / "lst-ai", threads=params.threads))
-        m2 = measure(subject, [baseline, syn], cal / "measure", params.threads, params.engine, log, segmenter)
+        m2 = measure(subject, [baseline, syn], cal / "measure", params.threads, params.engine, log, segmenter, params.reg_profile)
         ref = given_baseline_mask if (segmenter == "lst-ai" and given_baseline_mask is not None) else None
         g = grade(baseline, syn, cal, m2, truth, segmenter, params.bands, params.threads, reference_mask=ref)
         status["calibrate"] = "ok"
@@ -105,6 +105,8 @@ def _common(p: argparse.ArgumentParser) -> None:
                    help="'given' uses the manifest's masks; 'lst-ai' runs LST-AI v2 in docker for every scan")
     p.add_argument("--threads", type=int, default=4)
     p.add_argument("--engine", choices=("greedy", "ants"), default="greedy", help="deformable engine (lesiontrack)")
+    p.add_argument("--reg-profile", choices=("default", "smooth"), default="default",
+                   help="smooth: fewer false SEL candidates, expansion size under-read by ~1/6 (docs/SEL_NOISE_FLOOR.md)")
     p.add_argument("--volume-factor", type=float, dest="volume_factor", help="calibration: injected brain volume factor (default 0.98)")
     p.add_argument("--n-new", type=int, dest="n_new", help="calibration: injected new lesions (default 12)")
     p.add_argument("--seed", type=int, help="calibration seed (default 0), mixed with the subject name")

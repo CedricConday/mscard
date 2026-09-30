@@ -70,7 +70,7 @@ def _fingerprint(scans: list[Scan]) -> dict:
 
 
 def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, engine: str = "greedy",
-            log: list[str] | None = None, segmenter: str = "given") -> dict:
+            log: list[str] | None = None, segmenter: str = "given", reg_profile: str = "default") -> dict:
     """Run the longitudinal measurement for one subject and write ``out_dir/mscard.json``."""
     from lesiontrack.config import Params as LTParams
     from lesiontrack.config import RegParams
@@ -97,7 +97,16 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
         shutil.rmtree(lt_dir / "reg")
         log.append(f"{subject}: inputs changed since the last run; registration cache dropped")
     fp_path.write_text(json.dumps(fp, indent=2))
-    res = run_subject(subject, tps, lt_dir, LTParams(reg=RegParams(threads=threads, engine=engine)))
+    from dataclasses import replace
+
+    reg = RegParams(threads=threads, engine=engine)
+    if reg_profile == "smooth":
+        # study/sel_sensitivity.py: keeps every injected expansion detected and cuts SEL false positives from 0.50
+        # to 0.20 (25 MSLesSeg patients), but under-reads expansion size by about a sixth
+        reg = replace(reg, deform_sigma_update="3vox", deform_sigma_total="1vox")
+    elif reg_profile != "default":
+        raise ValueError(f"unknown registration profile {reg_profile!r}")
+    res = run_subject(subject, tps, lt_dir, LTParams(reg=reg))
     for p in res.pairs:
         overview(lt_dir, p.follow_up, out_dir / f"overview_{p.follow_up}.png")
     summary = json.loads((lt_dir / "summary.json").read_text())
@@ -139,6 +148,7 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
         "lesiontrack_version": summary["lesiontrack_version"],
         "subject": subject,
         "segmenter": segmenter,
+        "reg_profile": reg_profile,
         "baseline": baseline.session,
         "follow_up": last.session,
         "follow_ups": summary["follow_ups"],

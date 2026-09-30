@@ -196,6 +196,15 @@ says so. The synthetic lesions are ellipsoids with a fixed FLAIR contrast, so th
 the segmenter, not its accuracy on real lesions. A third subject (P3) was stopped before its
 synthetic scan.
 
+## FHIR export
+
+`mscard fhir derivatives/mscard/P1 --patient Patient/123 --out P1_bundle.json` writes the report as a FHIR R4B Bundle:
+one DiagnosticReport and one Observation per finding, each carrying the calibration light as its `interpretation`,
+so a hospital system receives the number together with whether the same pipeline recovered that kind of change on
+this patient's own scan. Validated against the R4B models of `fhir.resources` (`pip install mscard[fhir]`); status
+`preliminary`; finding codes are local because no LOINC code exists for them. (Formerly the separate package
+mscard-fhir.)
+
 ## Citations
 
 * Elliott C, et al. Slowly expanding/evolving lesions as a magnetic resonance imaging marker of chronic active multiple sclerosis lesions. *Mult Scler* 2019.

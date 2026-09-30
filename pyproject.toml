@@ -29,7 +29,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.4", "build"]
+dev = ["pytest>=7", "ruff>=0.4", "build", "fhir.resources>=7"]
+fhir = ["fhir.resources>=7"]
 
 [project.urls]
 Homepage = "https://github.com/CedricConday/mscard"

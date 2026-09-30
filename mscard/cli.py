@@ -97,6 +97,17 @@ def cmd_report(a: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_fhir(a: argparse.Namespace) -> int:
+    from .fhir import from_dir
+
+    b = json.dumps(from_dir(a.subject_dir, a.patient), indent=2)
+    if a.out:
+        Path(a.out).write_text(b + "\n")
+    else:
+        print(b)
+    return 0
+
+
 def _common(p: argparse.ArgumentParser) -> None:
     p.add_argument("manifest", help="TSV: subject, session, time_years, t1, flair [, mask, brainmask, date, scanner]")
     p.add_argument("--out", required=True)
@@ -126,6 +137,12 @@ def main(argv: list[str] | None = None) -> int:
     c = sub.add_parser("calibrate", help="calibration only: synthetic follow-up of each baseline, grade")
     _common(c)
     c.set_defaults(func=lambda a: cmd_run(a, False, True), no_calibrate=False)
+
+    f = sub.add_parser("fhir", help="export one subject's report as a FHIR R4B Bundle (needs pip install mscard[fhir])")
+    f.add_argument("subject_dir")
+    f.add_argument("--patient", help="FHIR reference, e.g. Patient/123")
+    f.add_argument("--out")
+    f.set_defaults(func=cmd_fhir)
 
     p = sub.add_parser("report", help="re-render report.html for every subject in an output tree, and the gallery")
     p.add_argument("out")

@@ -1,0 +1,77 @@
+{
+  "lesiontrack_version": "0.2.0",
+  "subject": "P19",
+  "baseline": "baseline",
+  "follow_ups": [
+    "synthetic"
+  ],
+  "dt_years": [
+    1.0
+  ],
+  "voxel_mm3": 1.0,
+  "baseline_lesion_count": 59,
+  "baseline_lesion_volume_mm3": 18590.0,
+  "sel_candidates": 90,
+  "sel_candidate_volume_mm3": 10696.0,
+  "tracking": {
+    "synthetic": {
+      "n_groups": 67,
+      "classes": {
+        "shrinking": 28,
+        "stable": 11,
+        "resolved": 9,
+        "adjacent_fragment": 8,
+        "trend_down": 6,
+        "enlarging": 3,
+        "trend_up": 2
+      },
+      "volume_baseline_mm3": 18590.0,
+      "volume_followup_mm3": 18634.0
+    }
+  },
+  "params": {
+    "sel": {
+      "je1_pct_per_year": 12.5,
+      "je2_pct_per_year": 4.0,
+      "min_voxels": 10,
+      "connectivity": 2,
+      "min_mean_pct_per_year": 0.0
+    },
+    "track": {
+      "change_pct_per_year": 9.0,
+      "stable_pct_per_year": 4.0,
+      "min_change_voxels": 3,
+      "new_lesion_margin_voxels": 1,
+      "connectivity": 2
+    },
+    "reg": {
+      "affine_dof": 6,
+      "affine_metric": "NMI",
+      "affine_iterations": "100x50x20",
+      "deform_metric": "NCC 3x3x3",
+      "deform_step": 0.7,
+      "deform_sigma_update": "2vox",
+      "deform_sigma_total": "0.5vox",
+      "deform_iterations": "100x60x30",
+      "stationary_velocity": true,
+      "t1_weight": 1.0,
+      "flair_weight": 1.0,
+      "threads": 4,
+      "engine": "greedy",
+      "ants_transform": "SyNOnly",
+      "ants_metric": "CC",
+      "ants_radius": 4,
+      "ants_iterations": [
+        100,
+        60,
+        30
+      ],
+      "ants_grad_step": 0.2,
+      "ants_flow_sigma": 3.0,
+      "ants_total_sigma": 0.0
+    }
+  },
+  "registration_records": [
+    "/home/ubuntu/repos/mscard/study/work_sens/P19/default/reg/synthetic_reg_params.json"
+  ]
+}

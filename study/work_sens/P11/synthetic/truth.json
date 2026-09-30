@@ -1,0 +1,155 @@
+{
+  "source": {
+    "t1": "/home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P11/T1/P11_T1_T1.nii.gz",
+    "flair": "/home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P11/T1/P11_T1_FLAIR.nii.gz",
+    "mask": "/home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P11/T1/P11_T1_MASK.nii.gz"
+  },
+  "seed": 0,
+  "time_fraction": 1.0,
+  "rigid_rotation_deg": [
+    -0.2004499363824015,
+    0.6063867490274997,
+    0.17241190084378766
+  ],
+  "rigid_translation_vox": [
+    -0.6248186841790349,
+    0.4516261932140253,
+    0.9626947945358328
+  ],
+  "lesions": [
+    {
+      "lesion_id": 1,
+      "n_voxels": 93,
+      "volume_factor": 1.4,
+      "cx": 52.09677505493164,
+      "cy": 79.17204284667969,
+      "cz": 78.93548583984375,
+      "true_mean_expansion_pct": 39.596961975097656
+    },
+    {
+      "lesion_id": 3,
+      "n_voxels": 106,
+      "volume_factor": 1.25,
+      "cx": 64.35848999023438,
+      "cy": 80.5,
+      "cz": 121.35848999023438,
+      "true_mean_expansion_pct": 24.672685623168945
+    },
+    {
+      "lesion_id": 4,
+      "n_voxels": 43,
+      "volume_factor": 1.15,
+      "cx": 62.44186019897461,
+      "cy": 90.39534759521484,
+      "cz": 95.51162719726562,
+      "true_mean_expansion_pct": 14.886549949645996
+    },
+    {
+      "lesion_id": 5,
+      "n_voxels": 606,
+      "volume_factor": 1.15,
+      "cx": 92.10231018066406,
+      "cy": 72.1815185546875,
+      "cz": 94.19471740722656,
+      "true_mean_expansion_pct": 10.733450889587402
+    },
+    {
+      "lesion_id": 6,
+      "n_voxels": 454,
+      "volume_factor": 1.15,
+      "cx": 95.17620849609375,
+      "cy": 89.47576904296875,
+      "cz": 49.86343765258789,
+      "true_mean_expansion_pct": 12.744207382202148
+    },
+    {
+      "lesion_id": 8,
+      "n_voxels": 85,
+      "volume_factor": 1.25,
+      "cx": 102.55294036865234,
+      "cy": 52.411766052246094,
+      "cz": 71.82353210449219,
+      "true_mean_expansion_pct": 24.99618911743164
+    },
+    {
+      "lesion_id": 12,
+      "n_voxels": 578,
+      "volume_factor": 1.4,
+      "cx": 112.57958221435547,
+      "cy": 116.48616027832031,
+      "cz": 118.07093048095703,
+      "true_mean_expansion_pct": 39.06736755371094
+    },
+    {
+      "lesion_id": 14,
+      "n_voxels": 44,
+      "volume_factor": 1.25,
+      "cx": 130.02272033691406,
+      "cy": 88.4772720336914,
+      "cz": 65.2272720336914,
+      "true_mean_expansion_pct": 24.999988555908203
+    },
+    {
+      "lesion_id": 2,
+      "n_voxels": 1005,
+      "volume_factor": 1.0,
+      "cx": 64.62786069651742,
+      "cy": 105.11940298507463,
+      "cz": 98.79502487562189,
+      "true_mean_expansion_pct": -0.42164868116378784
+    },
+    {
+      "lesion_id": 7,
+      "n_voxels": 261,
+      "volume_factor": 1.0,
+      "cx": 91.57471264367815,
+      "cy": 105.02681992337165,
+      "cz": 94.73180076628353,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 9,
+      "n_voxels": 54,
+      "volume_factor": 1.0,
+      "cx": 105.94444444444444,
+      "cy": 110.88888888888889,
+      "cz": 107.61111111111111,
+      "true_mean_expansion_pct": -4.9499640464782715
+    },
+    {
+      "lesion_id": 10,
+      "n_voxels": 121,
+      "volume_factor": 1.0,
+      "cx": 110.78512396694215,
+      "cy": 76.43801652892562,
+      "cz": 90.73553719008264,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 11,
+      "n_voxels": 890,
+      "volume_factor": 1.0,
+      "cx": 112.49438202247191,
+      "cy": 100.91011235955057,
+      "cz": 99.26404494382022,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 13,
+      "n_voxels": 1,
+      "volume_factor": 1.0,
+      "cx": 113.0,
+      "cy": 116.0,
+      "cz": 127.0,
+      "true_mean_expansion_pct": 7.5055718421936035
+    }
+  ],
+  "outputs": {
+    "t1": "/home/ubuntu/repos/mscard/study/work_sens/P11/synthetic/synth_T1w.nii.gz",
+    "flair": "/home/ubuntu/repos/mscard/study/work_sens/P11/synthetic/synth_FLAIR.nii.gz",
+    "mask": "/home/ubuntu/repos/mscard/study/work_sens/P11/synthetic/synth_mask.nii.gz",
+    "brainmask": "/home/ubuntu/repos/mscard/study/work_sens/P11/synthetic/synth_brainmask.nii.gz",
+    "baseline_lesion_labels": "/home/ubuntu/repos/mscard/study/work_sens/P11/synthetic/baseline_lesion_labels.nii.gz",
+    "truth_expansion_pct": "/home/ubuntu/repos/mscard/study/work_sens/P11/synthetic/truth_expansion_pct.nii.gz"
+  }
+}

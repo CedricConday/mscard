@@ -1,0 +1,371 @@
+{
+  "source": {
+    "t1": "/home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P13/T1/P13_T1_T1.nii.gz",
+    "flair": "/home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P13/T1/P13_T1_FLAIR.nii.gz",
+    "mask": "/home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P13/T1/P13_T1_MASK.nii.gz"
+  },
+  "seed": 0,
+  "time_fraction": 1.0,
+  "rigid_rotation_deg": [
+    -0.2004499363824015,
+    0.6063867490274997,
+    0.17241190084378766
+  ],
+  "rigid_translation_vox": [
+    -0.6248186841790349,
+    0.4516261932140253,
+    0.9626947945358328
+  ],
+  "lesions": [
+    {
+      "lesion_id": 1,
+      "n_voxels": 182,
+      "volume_factor": 1.4,
+      "cx": 34.36263656616211,
+      "cy": 129.13186645507812,
+      "cz": 90.52747344970703,
+      "true_mean_expansion_pct": 35.849613189697266
+    },
+    {
+      "lesion_id": 2,
+      "n_voxels": 127,
+      "volume_factor": 1.25,
+      "cx": 47.54330825805664,
+      "cy": 96.37007904052734,
+      "cz": 121.3622055053711,
+      "true_mean_expansion_pct": 24.116079330444336
+    },
+    {
+      "lesion_id": 3,
+      "n_voxels": 267,
+      "volume_factor": 1.15,
+      "cx": 51.33333206176758,
+      "cy": 99.9625473022461,
+      "cz": 95.26966094970703,
+      "true_mean_expansion_pct": 13.971829414367676
+    },
+    {
+      "lesion_id": 9,
+      "n_voxels": 131,
+      "volume_factor": 1.15,
+      "cx": 58.0,
+      "cy": 136.47328186035156,
+      "cz": 89.07633209228516,
+      "true_mean_expansion_pct": 14.999985694885254
+    },
+    {
+      "lesion_id": 10,
+      "n_voxels": 117,
+      "volume_factor": 1.15,
+      "cx": 60.30769348144531,
+      "cy": 81.29059600830078,
+      "cz": 33.13675308227539,
+      "true_mean_expansion_pct": 14.940471649169922
+    },
+    {
+      "lesion_id": 18,
+      "n_voxels": 83,
+      "volume_factor": 1.25,
+      "cx": 72.54216766357422,
+      "cy": 157.07229614257812,
+      "cz": 66.61445617675781,
+      "true_mean_expansion_pct": 24.800907135009766
+    },
+    {
+      "lesion_id": 21,
+      "n_voxels": 68,
+      "volume_factor": 1.4,
+      "cx": 82.17646789550781,
+      "cy": 91.3382339477539,
+      "cz": 130.5735321044922,
+      "true_mean_expansion_pct": 39.999996185302734
+    },
+    {
+      "lesion_id": 27,
+      "n_voxels": 52,
+      "volume_factor": 1.25,
+      "cx": 112.51923370361328,
+      "cy": 113.09615325927734,
+      "cz": 102.92308044433594,
+      "true_mean_expansion_pct": 24.233354568481445
+    },
+    {
+      "lesion_id": 4,
+      "n_voxels": 103,
+      "volume_factor": 1.0,
+      "cx": 52.66019417475728,
+      "cy": 119.39805825242719,
+      "cz": 114.25242718446601,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 5,
+      "n_voxels": 71,
+      "volume_factor": 1.0,
+      "cx": 52.985915492957744,
+      "cy": 77.0,
+      "cz": 87.08450704225352,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 6,
+      "n_voxels": 3187,
+      "volume_factor": 1.0,
+      "cx": 64.08785691873236,
+      "cy": 87.59209287731409,
+      "cz": 98.74082208973957,
+      "true_mean_expansion_pct": -0.3560321033000946
+    },
+    {
+      "lesion_id": 7,
+      "n_voxels": 604,
+      "volume_factor": 1.0,
+      "cx": 57.79801324503311,
+      "cy": 58.008278145695364,
+      "cz": 73.70198675496688,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 8,
+      "n_voxels": 57,
+      "volume_factor": 1.0,
+      "cx": 53.94736842105263,
+      "cy": 134.19298245614036,
+      "cz": 132.08771929824562,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 11,
+      "n_voxels": 82,
+      "volume_factor": 1.0,
+      "cx": 59.34146341463415,
+      "cy": 158.14634146341464,
+      "cz": 88.2560975609756,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 12,
+      "n_voxels": 814,
+      "volume_factor": 1.0,
+      "cx": 67.91031941031942,
+      "cy": 118.82555282555282,
+      "cz": 102.97665847665847,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 13,
+      "n_voxels": 697,
+      "volume_factor": 1.0,
+      "cx": 69.46197991391679,
+      "cy": 45.32855093256815,
+      "cz": 75.68723098995696,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 14,
+      "n_voxels": 3,
+      "volume_factor": 1.0,
+      "cx": 67.33333333333333,
+      "cy": 67.66666666666667,
+      "cz": 94.0,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 15,
+      "n_voxels": 59,
+      "volume_factor": 1.0,
+      "cx": 68.69491525423729,
+      "cy": 149.66101694915255,
+      "cz": 93.1864406779661,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 16,
+      "n_voxels": 20,
+      "volume_factor": 1.0,
+      "cx": 70.0,
+      "cy": 161.0,
+      "cz": 92.2,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 17,
+      "n_voxels": 140,
+      "volume_factor": 1.0,
+      "cx": 71.41428571428571,
+      "cy": 134.4142857142857,
+      "cz": 100.67142857142858,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 19,
+      "n_voxels": 112,
+      "volume_factor": 1.0,
+      "cx": 79.05357142857143,
+      "cy": 153.74107142857142,
+      "cz": 119.82142857142857,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 20,
+      "n_voxels": 74,
+      "volume_factor": 1.0,
+      "cx": 82.37837837837837,
+      "cy": 121.47297297297297,
+      "cz": 132.48648648648648,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 22,
+      "n_voxels": 69,
+      "volume_factor": 1.0,
+      "cx": 102.21739130434783,
+      "cy": 137.2463768115942,
+      "cz": 131.768115942029,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 23,
+      "n_voxels": 29,
+      "volume_factor": 1.0,
+      "cx": 101.41379310344827,
+      "cy": 119.27586206896552,
+      "cz": 120.37931034482759,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 24,
+      "n_voxels": 694,
+      "volume_factor": 1.0,
+      "cx": 111.40057636887607,
+      "cy": 152.30691642651297,
+      "cz": 93.9178674351585,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 25,
+      "n_voxels": 64,
+      "volume_factor": 1.0,
+      "cx": 109.109375,
+      "cy": 78.8125,
+      "cz": 102.734375,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 26,
+      "n_voxels": 157,
+      "volume_factor": 1.0,
+      "cx": 114.63694267515923,
+      "cy": 113.10191082802548,
+      "cz": 89.02547770700637,
+      "true_mean_expansion_pct": -0.13126271963119507
+    },
+    {
+      "lesion_id": 28,
+      "n_voxels": 700,
+      "volume_factor": 1.0,
+      "cx": 116.15857142857143,
+      "cy": 116.66428571428571,
+      "cz": 113.76714285714286,
+      "true_mean_expansion_pct": -0.6423219442367554
+    },
+    {
+      "lesion_id": 29,
+      "n_voxels": 100,
+      "volume_factor": 1.0,
+      "cx": 115.69,
+      "cy": 46.62,
+      "cz": 73.09,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 30,
+      "n_voxels": 57,
+      "volume_factor": 1.0,
+      "cx": 116.6842105263158,
+      "cy": 83.26315789473684,
+      "cz": 97.0,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 31,
+      "n_voxels": 66,
+      "volume_factor": 1.0,
+      "cx": 117.68181818181819,
+      "cy": 83.13636363636364,
+      "cz": 104.87878787878788,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 32,
+      "n_voxels": 60,
+      "volume_factor": 1.0,
+      "cx": 118.2,
+      "cy": 131.26666666666668,
+      "cz": 91.15,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 33,
+      "n_voxels": 45,
+      "volume_factor": 1.0,
+      "cx": 120.88888888888889,
+      "cy": 150.55555555555554,
+      "cz": 96.22222222222223,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 34,
+      "n_voxels": 59,
+      "volume_factor": 1.0,
+      "cx": 122.0677966101695,
+      "cy": 62.271186440677965,
+      "cz": 85.20338983050847,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 35,
+      "n_voxels": 284,
+      "volume_factor": 1.0,
+      "cx": 129.39084507042253,
+      "cy": 84.65140845070422,
+      "cz": 86.61619718309859,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 36,
+      "n_voxels": 51,
+      "volume_factor": 1.0,
+      "cx": 131.76470588235293,
+      "cy": 120.88235294117646,
+      "cz": 99.0,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 37,
+      "n_voxels": 62,
+      "volume_factor": 1.0,
+      "cx": 140.30645161290323,
+      "cy": 130.3709677419355,
+      "cz": 86.58064516129032,
+      "true_mean_expansion_pct": 0.0
+    },
+    {
+      "lesion_id": 38,
+      "n_voxels": 130,
+      "volume_factor": 1.0,
+      "cx": 142.56153846153848,
+      "cy": 135.90769230769232,
+      "cz": 97.95384615384616,
+      "true_mean_expansion_pct": 0.0
+    }
+  ],
+  "outputs": {
+    "t1": "/home/ubuntu/repos/mscard/study/work_sens/P13/synthetic/synth_T1w.nii.gz",
+    "flair": "/home/ubuntu/repos/mscard/study/work_sens/P13/synthetic/synth_FLAIR.nii.gz",
+    "mask": "/home/ubuntu/repos/mscard/study/work_sens/P13/synthetic/synth_mask.nii.gz",
+    "brainmask": "/home/ubuntu/repos/mscard/study/work_sens/P13/synthetic/synth_brainmask.nii.gz",
+    "baseline_lesion_labels": "/home/ubuntu/repos/mscard/study/work_sens/P13/synthetic/baseline_lesion_labels.nii.gz",
+    "truth_expansion_pct": "/home/ubuntu/repos/mscard/study/work_sens/P13/synthetic/truth_expansion_pct.nii.gz"
+  }
+}

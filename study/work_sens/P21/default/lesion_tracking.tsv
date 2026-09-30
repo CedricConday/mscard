@@ -1,0 +1,14 @@
+subject	follow_up	group_id	baseline_ids	followup_ids	n_baseline	n_followup	merged	split	volume_baseline_mm3	volume_followup_mm3	pct_per_year	class	cx	cy	cz	dt_years
+P21	synthetic	1	1	1	1	1	False	False	730	972	33.151	enlarging	45.818	134.37	81.447	1
+P21	synthetic	2	2	2	1	1	False	False	2253	2231	-0.97648	stable	62.251	147.09	84.92	1
+P21	synthetic	3	3	3	1	1	False	False	32	33	3.125	stable	52.75	142.84	72.062	1
+P21	synthetic	4	4	4	1	1	False	False	153	174	13.725	enlarging	56.948	66.32	127.31	1
+P21	synthetic	5	5	5	1	1	False	False	509	582	14.342	enlarging	62.872	75.385	90.919	1
+P21	synthetic	6	6	6	1	1	False	False	45	47	4.4444	trend_up	59.333	135.11	87	1
+P21	synthetic	7	7	8	1	1	False	False	199	195	-2.0101	stable	68.623	100.3	94.352	1
+P21	synthetic	8	8	7	1	1	False	False	37	42	13.514	enlarging	67.973	86.703	123.97	1
+P21	synthetic	9	9	9	1	1	False	False	144	132	-8.3333	trend_down	71.743	47.083	80.806	1
+P21	synthetic	10	10	10	1	1	False	False	232	234	0.86207	stable	108.27	47.5	79.828	1
+P21	synthetic	11	11	11	1	1	False	False	36	36	0	stable	107.33	47.556	30.5	1
+P21	synthetic	12	12	12	1	1	False	False	251	326	29.88	enlarging	115	75.135	89.586	1
+P21	synthetic	13	13	13	1	1	False	False	58	60	3.4483	stable	121.6	67.655	78.69	1

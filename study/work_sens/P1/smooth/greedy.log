@@ -1,0 +1,24 @@
+$ greedy -d 3 -threads 4 -a -dof 6 -m NMI -n 100x50x20 -ia-image-centers -i /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/synthetic/synth_T1w.nii.gz -o /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_to_baseline_rigid.mat
+Initial optimizer parameters 48 0.138851 -0.24001 -0.359199 -0.0727682 0.3546 -0.312932
+vnl_lbfgs: Error. Netlib routine lbfgs failed.
+Initial optimizer parameters 96 0.124123 0.814754 0.165652 -0.697074 -0.325747 -0.829724
+Initial optimizer parameters 192 0.682623 2.27539 0.623531 -0.858868 -0.340474 -0.902588
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz -ri LINEAR -rm /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_T1w_halfway.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_halfway.mat,-1
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz -ri LINEAR -rm /home/ubuntu/repos/mscard/study/work_sens/P1/synthetic/synth_T1w.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_followup_T1w_halfway.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_halfway.mat
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz -ri LINEAR -rm /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_FLAIR.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_FLAIR_halfway.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_halfway.mat,-1
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz -ri LINEAR -rm /home/ubuntu/repos/mscard/study/work_sens/P1/synthetic/synth_FLAIR.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_followup_FLAIR_halfway.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_halfway.mat
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz -ri NN -rt uchar -rm /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_MASK.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_mask_halfway.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_halfway.mat,-1
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz -ri NN -rt uchar -rm /home/ubuntu/repos/mscard/study/work_sens/P1/synthetic/synth_mask.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_followup_mask_halfway.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_halfway.mat
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_T1.nii.gz -ri NN -rt uchar -rm /home/ubuntu/repos/lesiontrack/sourcedata/mslesseg/train/P1/T1/P1_T1_brainmask.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_brainmask_halfway.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_halfway.mat,-1
+
+$ greedy -d 3 -threads 4 -m NCC 3x3x3 -n 100x60x30 -e 0.7 -s 3vox 1vox -sv -gm /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_brainmask_halfway.nii.gz -w 1.0 -i /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_T1w_halfway.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_followup_T1w_halfway.nii.gz -w 1.0 -i /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_FLAIR_halfway.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_followup_FLAIR_halfway.nii.gz -o /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_warp.nii.gz
+
+$ greedy -d 3 -threads 4 -rf /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_baseline_T1w_halfway.nii.gz -rm /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_followup_T1w_halfway.nii.gz /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_followup_T1w_warped.nii.gz -r /home/ubuntu/repos/mscard/study/work_sens/P1/smooth/reg/synthetic_warp.nii.gz
+

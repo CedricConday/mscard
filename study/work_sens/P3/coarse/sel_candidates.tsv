@@ -1,0 +1,8 @@
+subject	candidate_id	n_voxels	volume_mm3	peak_pct_per_year	mean_pct_per_year	seed_voxels	parent_lesion_id	cx	cy	cz	concentricity	n_bands	constancy_residual	constancy_slope_pct_per_year	dt_years	n_followups
+P3	1	100	100	33.1	24.233	100	3	50.81	102.81	100.72	3.2715	2			1	1
+P3	2	67	67	27.05	15.23	50	5	53.746	118.03	48.403	0.036192	2			1	1
+P3	3	17	17	15.5	7.925	1	8	56.412	121.24	43		1			1	1
+P3	4	108	108	21.275	13.325	64	12	65.602	75.481	101.17	1.9867	2			1	1
+P3	5	62	62	21.275	14.835	44	17	68.5	102.44	95.484	-0.34859	2			1	1
+P3	6	78	78	27.05	17.365	66	20	75.333	160.31	109.73	2.9276	2			1	1
+P3	7	52	52	21.275	13.455	32	23	103.71	75.462	112.88	-0.5304	2			1	1

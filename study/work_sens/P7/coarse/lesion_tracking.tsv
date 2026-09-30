@@ -1,0 +1,25 @@
+subject	follow_up	group_id	baseline_ids	followup_ids	n_baseline	n_followup	merged	split	volume_baseline_mm3	volume_followup_mm3	pct_per_year	class	cx	cy	cz	dt_years
+P7	synthetic	1	1	1	1	1	False	False	80	100	25	enlarging	51.225	121.16	103.04	1
+P7	synthetic	2	2	2,19	1	2	False	True	25321	24839	-1.9036	stable	82.301	103.01	87.822	1
+P7	synthetic	3	3	3	1	1	False	False	71	63	-11.268	shrinking	60.183	86.606	113.44	1
+P7	synthetic	4	4	4	1	1	False	False	51	53	3.9216	stable	63.647	101.71	112.35	1
+P7	synthetic	5	5	6	1	1	False	False	405	442	9.1358	enlarging	71.768	57.368	59.719	1
+P7	synthetic	6	6	5	1	1	False	False	66	72	9.0909	enlarging	70.258	109.7	87.136	1
+P7	synthetic	7	7	7	1	1	False	False	25	17	-32	shrinking	70	118	116	1
+P7	synthetic	8	8	9	1	1	False	False	63	72	14.286	enlarging	76.286	115.37	117.24	1
+P7	synthetic	9	9	10	1	1	False	False	371	366	-1.3477	stable	76.388	138.25	120.03	1
+P7	synthetic	10	10	8	1	1	False	False	235	242	2.9787	stable	77.838	100.99	39.494	1
+P7	synthetic	11	11		1	0	False	False	2	0	-100	resolved	75.5	150	73.5	1
+P7	synthetic	12	12	12	1	1	False	False	53	81	52.83	enlarging	79.962	146.68	76.264	1
+P7	synthetic	13	13	13	1	1	False	False	57	47	-17.544	shrinking	101.58	158.58	111	1
+P7	synthetic	14	14		1	0	False	False	17	0	-100	resolved	103.12	157.41	98	1
+P7	synthetic	15	15	15	1	1	False	False	46	40	-13.043	shrinking	107.59	116.43	86.261	1
+P7	synthetic	16	16	17	1	1	False	False	40	33	-17.5	shrinking	112.38	105.4	125.12	1
+P7	synthetic	17	17	18	1	1	False	False	56	48	-14.286	shrinking	113	88.5	119	1
+P7	synthetic	18	18	20	1	1	False	False	67	54	-19.403	shrinking	120.46	128.7	84.955	1
+P7	synthetic	19	19	21	1	1	False	False	650	617	-5.0769	trend_down	127.77	97.711	59.702	1
+P7	synthetic	20	20	22	1	1	False	False	250	242	-3.2	stable	128.66	109.89	53.952	1
+P7	synthetic	21	21	23	1	1	False	False	64	78	21.875	enlarging	131.14	110.16	96.406	1
+P7	synthetic	22		11	0	1	False	False	0	1		adjacent_fragment	76	150	72	1
+P7	synthetic	23		14	0	1	False	False	0	10		adjacent_fragment	103.9	157	97	1
+P7	synthetic	24		16	0	1	False	False	0	2		adjacent_fragment	109.5	73	81	1

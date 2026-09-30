@@ -1,0 +1,61 @@
+subject	follow_up	group_id	baseline_ids	followup_ids	n_baseline	n_followup	merged	split	volume_baseline_mm3	volume_followup_mm3	pct_per_year	class	cx	cy	cz	dt_years
+P24	synthetic	1	1	1	1	1	False	False	78	109	39.744	enlarging	41.115	98.872	100.47	1
+P24	synthetic	2	2	2	1	1	False	False	277	347	25.271	enlarging	45.614	119.23	96.368	1
+P24	synthetic	3	3	3	1	1	False	False	132	120	-9.0909	shrinking	51.288	110.88	126.6	1
+P24	synthetic	4	4	4	1	1	False	False	51	51	0	stable	52.451	74.863	94.02	1
+P24	synthetic	5	5	5	1	1	False	False	67	65	-2.9851	stable	52.776	155.9	84.433	1
+P24	synthetic	6	6	6	1	1	False	False	68	65	-4.4118	trend_down	52.912	164.46	84.162	1
+P24	synthetic	7	7	7	1	1	False	False	428	393	-8.1776	trend_down	58.357	76.626	80.023	1
+P24	synthetic	8	8	9	1	1	False	False	103	103	0	stable	57.35	117.25	56.495	1
+P24	synthetic	9	9	8	1	1	False	False	56	47	-16.071	shrinking	58.5	101.71	127.43	1
+P24	synthetic	10	10	10	1	1	False	False	190	180	-5.2632	trend_down	59.116	137.27	99.768	1
+P24	synthetic	11	11	12	1	1	False	False	453	435	-3.9735	stable	67.234	114.75	112.09	1
+P24	synthetic	12	12		1	0	False	False	11	0	-100	resolved	64.545	126.18	129	1
+P24	synthetic	13	13	13	1	1	False	False	205	224	9.2683	enlarging	64.932	159.3	94.624	1
+P24	synthetic	14	14	14	1	1	False	False	578	564	-2.4221	stable	69.038	104.02	111.62	1
+P24	synthetic	15	15	15	1	1	False	False	79	86	8.8608	trend_up	68.228	128.68	123.23	1
+P24	synthetic	16	16	16	1	1	False	False	144	123	-14.583	shrinking	71.354	77.778	100.36	1
+P24	synthetic	17	17	17	1	1	False	False	73	71	-2.7397	stable	73.315	113.66	85.055	1
+P24	synthetic	18	18	18	1	1	False	False	127	123	-3.1496	stable	74.598	129.18	101.19	1
+P24	synthetic	19	19	19	1	1	False	False	351	337	-3.9886	stable	75.057	138.92	95.926	1
+P24	synthetic	20	20	20	1	1	False	False	118	106	-10.169	shrinking	74.559	157.24	110.86	1
+P24	synthetic	21	21	21	1	1	False	False	55	52	-5.4545	trend_down	76.855	166.22	95.364	1
+P24	synthetic	22	22	22	1	1	False	False	8	6	-25	trend_down	75.5	144.38	110.62	1
+P24	synthetic	23	23	23	1	1	False	False	233	227	-2.5751	stable	80.811	140.26	125.99	1
+P24	synthetic	24	24	24	1	1	False	False	92	122	32.609	enlarging	81.261	103.62	137.73	1
+P24	synthetic	25	25	25	1	1	False	False	17	15	-11.765	trend_down	81.471	83.294	125.59	1
+P24	synthetic	26	26	26	1	1	False	False	26	20	-23.077	shrinking	99.115	123.46	135.88	1
+P24	synthetic	27	27	29	1	1	False	False	26	19	-26.923	shrinking	101.19	146.58	115.31	1
+P24	synthetic	28	28	27	1	1	False	False	86	81	-5.814	trend_down	100.55	151.59	119.8	1
+P24	synthetic	29	29	28	1	1	False	False	149	139	-6.7114	trend_down	102.11	112.03	134.37	1
+P24	synthetic	30	30	30	1	1	False	False	65	53	-18.462	shrinking	105.05	112.62	92.492	1
+P24	synthetic	31	31	31	1	1	False	False	83	67	-19.277	shrinking	106.01	135.06	122.11	1
+P24	synthetic	32	32	32	1	1	False	False	222	295	32.883	enlarging	107.57	106.29	125.77	1
+P24	synthetic	33	33	33	1	1	False	False	779	739	-5.1348	trend_down	112.16	84.062	96.134	1
+P24	synthetic	34	34	34	1	1	False	False	22	18	-18.182	shrinking	110.14	75.955	119.86	1
+P24	synthetic	35	35	36	1	1	False	False	324	290	-10.494	shrinking	114.28	69.364	88.188	1
+P24	synthetic	36	36	35	1	1	False	False	50	46	-8	trend_down	111.44	98.08	128	1
+P24	synthetic	37	37	38	1	1	False	False	68	53	-22.059	shrinking	113.32	100.26	104.46	1
+P24	synthetic	38	38	37	1	1	False	False	186	168	-9.6774	shrinking	114.5	122.63	118.58	1
+P24	synthetic	39	39	39	1	1	False	False	65	58	-10.769	shrinking	115.45	77.431	74	1
+P24	synthetic	40	40	40	1	1	False	False	155	143	-7.7419	trend_down	116.37	113.14	105.68	1
+P24	synthetic	41	41		1	0	False	False	5	0	-100	resolved	114.4	149.8	115	1
+P24	synthetic	42	42	42	1	1	False	False	655	662	1.0687	stable	121.89	68.905	82.296	1
+P24	synthetic	43	43		1	0	False	False	4	0	-100	resolved	119.5	80	86	1
+P24	synthetic	44	44	44	1	1	False	False	201	189	-5.9701	trend_down	125.6	93.338	100.15	1
+P24	synthetic	45	45	45	1	1	False	False	72	58	-19.444	shrinking	120.96	117.76	96	1
+P24	synthetic	46	46	46	1	1	False	False	62	51	-17.742	shrinking	122.47	120.19	57.081	1
+P24	synthetic	47	47	47	1	1	False	False	198	179	-9.596	shrinking	126.18	115.1	107.99	1
+P24	synthetic	48	48	48	1	1	False	False	44	40	-9.0909	shrinking	126.82	93.455	66.5	1
+P24	synthetic	49	49	50	1	1	False	False	50	39	-22	shrinking	127.8	85.5	67	1
+P24	synthetic	50	50	49	1	1	False	False	128	119	-7.0312	trend_down	129.93	100.83	104.38	1
+P24	synthetic	51	51	51	1	1	False	False	67	57	-14.925	shrinking	132.13	83.373	74.075	1
+P24	synthetic	52	52	52	1	1	False	False	57	48	-15.789	shrinking	132.49	115.77	119.75	1
+P24	synthetic	53	53	53	1	1	False	False	34	27	-20.588	shrinking	131.94	150.5	85.382	1
+P24	synthetic	54	54	54	1	1	False	False	179	156	-12.849	shrinking	137.9	123.54	90.296	1
+P24	synthetic	55	55	55	1	1	False	False	24	17	-29.167	shrinking	137.29	73.583	98.5	1
+P24	synthetic	56	56	56	1	1	False	False	14	7	-50	shrinking	139.86	121.93	112.64	1
+P24	synthetic	57	57	57	1	1	False	False	71	60	-15.493	shrinking	142.89	106.75	58.31	1
+P24	synthetic	58		11	0	1	False	False	0	11		adjacent_fragment	64.818	125.45	130	1
+P24	synthetic	59		41	0	1	False	False	0	1		adjacent_fragment	115	149	114	1
+P24	synthetic	60		43	0	1	False	False	0	1		adjacent_fragment	120	80	85	1

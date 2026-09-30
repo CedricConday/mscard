@@ -1,0 +1,20 @@
+subject	follow_up	group_id	baseline_ids	followup_ids	n_baseline	n_followup	merged	split	volume_baseline_mm3	volume_followup_mm3	pct_per_year	class	cx	cy	cz	dt_years
+P4	synthetic	1	1	1	1	1	False	False	40	51	27.5	enlarging	48.85	77	100.65	1
+P4	synthetic	2	2	2,3	1	2	False	True	26309	25501	-3.0712	stable	90.39	82.602	92.576	1
+P4	synthetic	3	3		1	0	False	False	3	0	-100	resolved	52	87	63	1
+P4	synthetic	4	4	4	1	1	False	False	29	21	-27.586	shrinking	58.552	122.38	95.034	1
+P4	synthetic	5	5	5	1	1	False	False	3803	3782	-0.5522	stable	66.984	146.4	84.894	1
+P4	synthetic	6	6	6	1	1	False	False	231	239	3.4632	stable	71.446	151.39	102.1	1
+P4	synthetic	7	7	7	1	1	False	False	68	72	5.8824	trend_up	72.324	106.25	122.22	1
+P4	synthetic	8	8	8	1	1	False	False	34	29	-14.706	shrinking	72.882	126.35	101.03	1
+P4	synthetic	9	9	9	1	1	False	False	223	239	7.1749	trend_up	76.027	128	130.17	1
+P4	synthetic	10	10	10	1	1	False	False	2962	2838	-4.1864	trend_down	105.32	141.21	93.07	1
+P4	synthetic	11	11	11	1	1	False	False	123	196	59.35	enlarging	106.76	143.15	102.08	1
+P4	synthetic	12	12	12	1	1	False	False	74	65	-12.162	shrinking	112.35	110.26	80.703	1
+P4	synthetic	13	13	13	1	1	False	False	32	23	-28.125	shrinking	113.62	160	86.5	1
+P4	synthetic	14	14	14	1	1	False	False	221	201	-9.0498	shrinking	116.89	109.08	86.891	1
+P4	synthetic	15	15	15	1	1	False	False	363	330	-9.0909	shrinking	122.93	125.65	94.278	1
+P4	synthetic	16	16	16	1	1	False	False	236	209	-11.441	shrinking	119.22	136.5	89.733	1
+P4	synthetic	17	17	17	1	1	False	False	56	47	-16.071	shrinking	118.93	94.946	83.018	1
+P4	synthetic	18	18	18	1	1	False	False	97	87	-10.309	shrinking	133.85	107.4	54.361	1
+P4	synthetic	19	19	19	1	1	False	False	78	81	3.8462	stable	136.15	83.231	102.5	1

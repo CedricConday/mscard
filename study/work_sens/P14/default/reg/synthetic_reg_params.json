@@ -1,0 +1,34 @@
+{
+  "reg": {
+    "affine_dof": 6,
+    "affine_metric": "NMI",
+    "affine_iterations": "100x50x20",
+    "deform_metric": "NCC 3x3x3",
+    "deform_step": 0.7,
+    "deform_sigma_update": "2vox",
+    "deform_sigma_total": "0.5vox",
+    "deform_iterations": "100x60x30",
+    "stationary_velocity": true,
+    "t1_weight": 1.0,
+    "flair_weight": 1.0,
+    "threads": 4,
+    "engine": "greedy",
+    "ants_transform": "SyNOnly",
+    "ants_metric": "CC",
+    "ants_radius": 4,
+    "ants_iterations": [
+      100,
+      60,
+      30
+    ],
+    "ants_grad_step": 0.2,
+    "ants_flow_sigma": 3.0,
+    "ants_total_sigma": 0.0
+  },
+  "frame": null,
+  "jacobian": "voxel-frame-1",
+  "rigid_qc": {
+    "rotation_deg": 0.6632503020445342,
+    "translation_mm": 1.3021353837715954
+  }
+}

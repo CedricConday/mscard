@@ -1,0 +1,25 @@
+subject	follow_up	group_id	baseline_ids	followup_ids	n_baseline	n_followup	merged	split	volume_baseline_mm3	volume_followup_mm3	pct_per_year	class	cx	cy	cz	dt_years
+P5	synthetic	1	1	1	1	1	False	False	219	320	46.119	enlarging	60.676	75.429	91.16	1
+P5	synthetic	2	2	2	1	1	False	False	92	90	-2.1739	stable	65.5	141.93	94.446	1
+P5	synthetic	3	3	3	1	1	False	False	45	45	0	stable	66.6	87.533	98	1
+P5	synthetic	4	4	4	1	1	False	False	371	417	12.399	enlarging	73.593	93.491	36.59	1
+P5	synthetic	5	5	5	1	1	False	False	123	142	15.447	enlarging	76.13	91.122	32.447	1
+P5	synthetic	6	6	6	1	1	False	False	27	20	-25.926	shrinking	70.037	108.56	101.44	1
+P5	synthetic	7	7	8	1	1	False	False	27	27	0	stable	71.37	159.7	72	1
+P5	synthetic	8	8		1	0	False	False	2	0	-100	resolved	71	114.5	98	1
+P5	synthetic	9	9	7	1	1	False	False	33	36	9.0909	enlarging	71.667	115.61	103.79	1
+P5	synthetic	10	10	9	1	1	False	False	181	181	0	stable	79.337	157.97	64.508	1
+P5	synthetic	11	11		1	0	False	False	9	0	-100	resolved	81.667	88.222	36	1
+P5	synthetic	12	12	11	1	1	False	False	12	12	0	stable	82.667	88.667	43.417	1
+P5	synthetic	13	13	12	1	1	False	False	1655	2013	21.631	enlarging	102	96.31	34.937	1
+P5	synthetic	14	14	13	1	1	False	False	342	310	-9.3567	shrinking	109.19	125.08	100.94	1
+P5	synthetic	15	15	14	1	1	False	False	89	73	-17.978	shrinking	109.66	137.09	98.708	1
+P5	synthetic	16	16		1	0	False	False	5	0	-100	resolved	109	141.4	93.8	1
+P5	synthetic	17	17	16	1	1	False	False	516	478	-7.3643	trend_down	117.06	65.665	87.211	1
+P5	synthetic	18	18		1	0	False	False	1	0	-100	resolved	113	138	104	1
+P5	synthetic	19	19	17	1	1	False	False	46	37	-19.565	shrinking	120.8	128.15	92.022	1
+P5	synthetic	20	20		1	0	False	False	2	0	-100	resolved	120	76.5	83	1
+P5	synthetic	21	21	19	1	1	False	False	191	238	24.607	enlarging	128.99	97.717	60.455	1
+P5	synthetic	22	22	18	1	1	False	False	48	53	10.417	enlarging	128.04	82.312	98.583	1
+P5	synthetic	23		10	0	1	False	False	0	9		adjacent_fragment	81	88	37	1
+P5	synthetic	24		15	0	1	False	False	0	1		adjacent_fragment	110	141	93	1

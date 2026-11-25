@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mscard"
-version = "0.2.0"
+version = "0.2.1"
 description = "Longitudinal multiple sclerosis MRI report that grades itself: new, enlarging, resolved and slowly expanding lesions, brain volume change, and a calibration of the same pipeline on the same scan with known injected truth."
 readme = "README.md"
 license = {text = "MIT"}
@@ -24,7 +24,7 @@ dependencies = [
   "nibabel>=5",
   "pandas>=2",
   "matplotlib>=3.7",
-  "lesiontrack>=0.3.0",
+  "lesiontrack>=0.3.2",
   "bidsgate>=0.2.0",
 ]
 

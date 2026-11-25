@@ -120,39 +120,39 @@ scanner change. It is a floor, not a validation.
 
 ## Results
 
-**MSLesSeg cohort, 2026-11-25, lesiontrack 0.3.0, this box (4 CPU threads, greedy engine), expert lesion
+**MSLesSeg cohort, 2026-11-25, lesiontrack 0.3.2, this box (4 CPU threads, greedy engine), expert lesion
 masks supplied (`--segmenter given`), calibration factor 0.98, 12 injected lesions per subject.** Every
 report is in the gallery: https://cedricconday.github.io/mscard/ (one self-contained page per subject).
 
 | Subject | Years | Baseline lesions | New | Enlarging | Shrinking | Resolved | SEL cand. | Lesion vol %/yr | Brain vol %/yr (eroded) | Boundary | Injected found | False new | Unchanged called changed | SEL/lesion on unchanged | Atrophy recovery |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| P1 | 1.40 | 18 | 4 | 3 | 4 | 7 | 16 | -17.7 | 1.22 (0.01) | amber | 12/12 | 0 | 3/18 | 0.00 | 1.10 |
-| P2 | 4.59 | 15 | 2 | 6 | 1 | 0 | 0 | 6.5 | -0.80 (-0.74) | green | 12/12 | 0 | 0/15 | 0.40 | 1.02 |
-| P3 | 4.41 | 41 | 5 | 4 | 3 | 21 | 2 | -8.3 | -0.25 (-0.39) | green | 12/12 | 0 | 3/37 | 0.02 | 1.20 |
+| P1 | 1.40 | 18 | 4 | 3 | 4 | 7 | 18 | -18.0 | 1.22 (0.01) | amber | 12/12 | 0 | 0/18 | 0.00 | 1.10 |
+| P2 | 4.59 | 15 | 2 | 6 | 1 | 0 | 0 | 6.5 | -0.80 (-0.74) | green | 12/12 | 0 | 1/15 | 0.40 | 1.02 |
+| P3 | 4.41 | 41 | 5 | 4 | 3 | 21 | 2 | -8.3 | -0.25 (-0.39) | green | 12/12 | 0 | 0/37 | 0.02 | 1.20 |
 | P4 | 2.19 | 19 | 4 | 2 | 4 | 5 | 50 | 6.6 | -0.86 (-1.34) | green | 12/12 | 0 | 0/18 | 1.11 | 1.22 |
-| P5 | 1.59 | 22 | 4 | 5 | 3 | 9 | 6 | -6.2 | -0.16 (-0.71) | amber | 12/12 | 0 | 0/18 | 0.18 | 1.12 |
-| P6 | 2.01 | 33 | 18 | 9 | 6 | 13 | 31 | 14.8 | -2.38 (-2.32) | green | 12/12 | 0 | 0/32 | 0.27 | 1.10 |
-| P7 | 0.97 | 21 | 11 | 4 | 3 | 8 | 25 | 30.4 | 0.08 (-0.25) | green | 12/12 | 0 | 1/19 | 0.39 | 1.17 |
+| P5 | 1.59 | 22 | 4 | 5 | 3 | 9 | 6 | -6.2 | -0.16 (-0.71) | amber | 12/12 | 0 | 0/18 | 0.14 | 1.12 |
+| P6 | 2.01 | 33 | 18 | 9 | 6 | 13 | 31 | 14.8 | -2.38 (-2.32) | green | 12/12 | 0 | 0/32 | 0.30 | 1.10 |
+| P7 | 0.97 | 21 | 11 | 4 | 3 | 8 | 25 | 30.5 | 0.08 (-0.25) | green | 12/12 | 0 | 0/19 | 0.52 | 1.17 |
 | P8 | 1.02 | 17 | 7 | 4 | 7 | 4 | 6 | 10.9 | -3.48 (-2.52) | amber | 12/12 | 0 | 0/16 | 0.41 | 1.10 |
-| P9 | 2.15 | 14 | 3 | 4 | 7 | 2 | 2 | 0.5 | -2.46 (-1.22) | amber | 12/12 | 0 | 0/12 | 0.29 | 1.16 |
-| P10 | 1.00 | 34 | 11 | 9 | 7 | 12 | 16 | 14.5 | -3.45 (-1.95) | amber | 12/12 | 0 | 2/33 | 0.12 | 1.11 |
-| P11 | 0.58 | 14 | 1 | 4 | 4 | 4 | 12 | -38.5 | -7.02 (-8.11) | amber | 12/12 | 0 | 0/13 | 0.14 | 1.12 |
-| P12 | 3.16 | 33 | 13 | 5 | 8 | 9 | 36 | 7.4 | -1.84 (-1.86) | green | 12/12 | 0 | 0/28 | 0.16 | 1.06 |
-| P13 | 1.39 | 38 | 22 | 14 | 14 | 5 | 35 | 4.6 | -2.29 (-2.21) | green | 12/12 | 0 | 1/37 | 0.42 | 1.11 |
+| P9 | 2.15 | 14 | 3 | 4 | 7 | 2 | 2 | 0.6 | -2.46 (-1.22) | amber | 12/12 | 0 | 0/12 | 0.29 | 1.16 |
+| P10 | 1.00 | 34 | 11 | 9 | 7 | 12 | 16 | 13.9 | -3.45 (-1.95) | amber | 12/12 | 0 | 0/33 | 0.15 | 1.11 |
+| P11 | 0.58 | 14 | 1 | 3 | 4 | 4 | 11 | -44.8 | -7.02 (-8.11) | amber | 12/12 | 0 | 0/13 | 0.14 | 1.12 |
+| P12 | 3.16 | 32 | 13 | 5 | 8 | 9 | 35 | 5.7 | -1.84 (-1.86) | green | 12/12 | 0 | 0/29 | 0.16 | 1.06 |
+| P13 | 1.39 | 38 | 22 | 14 | 14 | 5 | 35 | 4.4 | -2.29 (-2.21) | green | 12/12 | 0 | 0/37 | 0.42 | 1.11 |
 | P14 | 3.75 | 16 | 17 | 1 | 2 | 4 | 9 | -0.8 | 0.39 (-0.37) | amber | 12/12 | 0 | 0/16 | 0.00 | 1.04 |
-| P19 | 6.03 | 58 | 9 | 3 | 0 | 36 | 15 | 2.5 | 0.55 (0.21) | green | 12/12 | 0 | 0/54 | 0.41 | 1.12 |
-| P20 | 4.37 | 8 | 10 | 0 | 1 | 7 | 4 | 24.5 | 0.67 (1.21) | amber | 12/12 | 0 | 0/8 | 0.12 | 1.13 |
-| P22 | 0.59 | 21 | 3 | 7 | 9 | 4 | 1 | -14.2 | 0.70 (-1.37) | red | 12/12 | 0 | 1/19 | 0.00 | 1.09 |
+| P19 | 6.03 | 58 | 9 | 3 | 0 | 36 | 15 | 2.5 | 0.55 (0.21) | green | 12/12 | 0 | 1/57 | 0.39 | 1.12 |
+| P20 | 4.37 | 8 | 10 | 0 | 1 | 7 | 4 | 24.6 | 0.67 (1.21) | amber | 12/12 | 0 | 0/8 | 0.12 | 1.13 |
+| P22 | 0.59 | 21 | 3 | 7 | 9 | 4 | 1 | -14.2 | 0.70 (-1.37) | red | 12/12 | 0 | 0/19 | 0.00 | 1.09 |
 | P28 | 0.97 | 8 | 14 | 1 | 3 | 2 | 1 | 25.2 | -8.24 (-6.29) | red | 12/12 | 0 | 0/8 | 0.00 | 1.09 |
-| P31 | 1.48 | 28 | 7 | 15 | 4 | 2 | 9 | 34.8 | -0.58 (0.37) | amber | 12/12 | 0 | 2/24 | 0.07 | 1.12 |
+| P31 | 1.48 | 28 | 7 | 15 | 4 | 2 | 9 | 34.8 | -0.58 (0.37) | amber | 12/12 | 0 | 0/24 | 0.07 | 1.12 |
 | P33 | 2.42 | 41 | 2 | 3 | 8 | 21 | 9 | -16.3 | -0.85 (-0.57) | green | 12/12 | 0 | 0/37 | 0.05 | 1.25 |
-| P50 | 1.00 | 47 | 8 | 14 | 10 | 13 | 20 | 298.5 | -0.41 (0.40) | amber | 12/12 | 0 | 1/43 | 0.26 | 1.45 |
-| P51 | 3.01 | 43 | 18 | 6 | 2 | 26 | 36 | 10.3 | -1.29 (-1.76) | green | 12/12 | 0 | 0/41 | 0.02 | 1.28 |
-| P52 | 0.16 | 26 | 3 | 5 | 4 | 15 | 16 | -88.3 | 29.23 (13.18) | red | 12/12 | 0 | 0/25 | 0.12 | 1.21 |
+| P50 | 1.00 | 47 | 8 | 14 | 10 | 13 | 20 | 298.5 | -0.41 (0.40) | amber | 12/12 | 0 | 0/43 | 0.23 | 1.45 |
+| P51 | 3.01 | 43 | 18 | 6 | 2 | 26 | 37 | 9.5 | -1.29 (-1.76) | green | 12/12 | 0 | 0/41 | 0.02 | 1.28 |
+| P52 | 0.16 | 26 | 3 | 5 | 4 | 15 | 16 | -87.3 | 29.23 (13.18) | red | 12/12 | 0 | 0/25 | 0.12 | 1.21 |
 | P53 | 1.17 | 22 | 21 | 0 | 1 | 21 | 13 | -7.6 | -1.07 (-1.69) | amber | 12/12 | 0 | 0/22 | 0.23 | 1.12 |
 
 Subjects: 24. Injected new lesions reported: 288 of 288; false new: 0. Unchanged lesions called enlarging or
-shrinking: 14 of 593; called resolved: 0. SEL candidates per unchanged lesion: median 0.15 (range 0.00 to
+shrinking: 2 of 597; called resolved: 4. SEL candidates per unchanged lesion: median 0.14 (range 0.00 to
 1.11). Atrophy recovery: median 1.12 (range 1.02 to 1.45). Boundary check on the real pairs: green 10, amber
 11, red 3.
 
@@ -167,12 +167,17 @@ What the numbers say, and what they do not:
   follow-up mask contains the injected lesions by construction, so 288 of 288 says that
   lesiontrack's tracking calls an injected lesion "new" rather than a fragment or a merge, and
   nothing about detection. That is why the badge is grey. The LST-AI mode grades detection.
-* **Enlarging, shrinking, resolved: 14 false calls in 593 lesions, 0 false resolved.** Each baseline
-  lesion is judged against its own truth volume in the synthetic mask, with lesiontrack's ±9 %/yr
-  and ±4 %/yr bands. Under lesiontrack 0.2.0 this was 1 in 594. Ten of the 14 are in four patients
-  (P1 3 of 18, P3 3 of 37, P10 2 of 33, P31 2 of 24); P1 is red. The cause is not traced yet. The
-  real pairs still show many resolved and shrinking lesions (P1: 7 resolved of 18); the calibration
-  cannot tell annotation drift between visits from biology, and the page says so.
+* **Enlarging, shrinking, resolved: 2 false change calls in 597 lesions, 4 false resolved.** Each
+  baseline lesion is judged against its own truth volume in the synthetic mask, with lesiontrack's ±9 %/yr
+  and ±4 %/yr bands. Under lesiontrack 0.2.0 this was 1 in 594, under 0.3.0 and 0.3.1 it was 14 in 593,
+  every one of them "enlarging" (+9 to +39 %/yr). Traced on 2026-11-25 to lesiontrack's mask reslicing:
+  nearest-neighbour resampling under the similarity's scale, a fraction of a percent from 1, duplicates
+  one voxel layer per axis at follow-up and drops one at baseline, so a lesion cut by that plane grew.
+  lesiontrack 0.3.2 reslices masks without the scale, and mscard 0.2.1 requires it. The 4 false resolved
+  are lesions of 5 to 27 mm³ that do shrink in the truth (by 18 to 80 %/yr); their follow-up
+  remnant sits one voxel from the baseline lesion and no longer overlaps it, so tracking calls them
+  gone. The real pairs still show many resolved and shrinking lesions (P1: 7 resolved of 18); the
+  calibration cannot tell annotation drift between visits from biology, and the page says so.
 * **Brain volume change: recovery 1.02 to 1.45, median 1.12.** The measurement over-reads a uniform
   2 % contraction by about a tenth. Under lesiontrack 0.2.0 it was 1.18. Since lesiontrack 0.3.0 the
   linear step includes one global scale, which takes up part of a uniform change before the
@@ -181,13 +186,13 @@ What the numbers say, and what they do not:
   the boundary check is green for 10, amber for 11 and red for 3. Where it is red, the full-mask and
   eroded-mask numbers disagree by more than 1.5 points per year, and the page calls the number
   rim-dominated.
-* **SEL candidates: green for 14 of 24, red for 1.** With no lesion expanding, the Elliott et al. 2019
-  candidate rule marks a median 0.15 candidates per baseline lesion (1.09 under lesiontrack 0.2.0,
+* **SEL candidates: green for 14 of 24, red for 2.** With no lesion expanding, the Elliott et al. 2019
+  candidate rule marks a median 0.14 candidates per baseline lesion (1.09 under lesiontrack 0.2.0,
   red for 18 of 24). The drop follows lesiontrack 0.3.0, which stopped rounding the warps
   and added a mean-rate floor. This is the noise floor of the candidate stage at this registration, and a reader of any
   SEL count should have it next to that count.
 
-### With `--reg-profile smooth` (2026-11-25, lesiontrack 0.3.0)
+### With `--reg-profile smooth` (2026-11-25, lesiontrack 0.3.2)
 
 The SEL studies (`docs/SEL_NOISE_FLOOR.md`) found that a smoother deformation field keeps every injected
 expansion detected and cuts false SEL candidates. Same 24 patients, same calibration, in
@@ -195,14 +200,15 @@ expansion detected and cuts false SEL candidates. Same 24 patients, same calibra
 
 | | default | smooth |
 |---|---:|---:|
-| SEL candidates per unchanged lesion, median (range) | 0.15 (0.00 to 1.11) | 0.00 (0.00 to 0.12) |
-| SEL badge green / amber / red | 14 / 9 / 1 | 24 / 0 / 0 |
-| unchanged lesions falsely called enlarging or shrinking | 14 of 593 | 14 of 593 |
+| SEL candidates per unchanged lesion, median (range) | 0.14 (0.00 to 1.11) | 0.00 (0.00 to 0.12) |
+| SEL badge green / amber / red | 14 / 8 / 2 | 24 / 0 / 0 |
+| unchanged lesions falsely called enlarging or shrinking | 2 of 597 | 1 of 597 |
+| unchanged lesions falsely called resolved | 4 | 4 |
 | brain volume recovery, median (range) | 1.12 (1.02 to 1.45) | 1.14 (1.08 to 1.39) |
 | boundary check green / amber / red | 10 / 11 / 3 | 15 / 7 / 2 |
 
 Under lesiontrack 0.2.0 the smooth profile was what moved the SEL line from red to green (1.09 to 0.07
-per lesion). Under 0.3.0 the default is already mostly green, and smooth turns the remaining 10 green.
+per lesion). Since 0.3.0 the default is already mostly green, and smooth turns the remaining 10 green.
 The price, measured in the sensitivity study under 0.2.0, is that the smooth field under-reads the size
 of a real expansion by about a sixth. So use it for counting SEL candidates, and the default for
 measuring expansion rates.

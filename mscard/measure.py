@@ -18,7 +18,7 @@ def _vol_mm3(path: Path) -> float:
 
 
 def brain_volume_change(jacobian: Path, brainmask_halfway: Path | None, baseline_t1_halfway: Path,
-                        erode_mm: float = 6.0) -> dict:
+                        erode_mm: float = 6.0, linear_volume_factor: float = 1.0) -> dict:
     """Whole-brain volume change from the deformation field: mean det J over the baseline brain.
 
     det J > 1 where the follow-up is locally larger than the baseline, so
@@ -28,6 +28,15 @@ def brain_volume_change(jacobian: Path, brainmask_halfway: Path | None, baseline
     calibration cannot provide: two visits stripped differently move the
     boundary, and a change that lives only in the outer rim is a mask
     difference, not tissue.
+
+    Since lesiontrack 0.3.0 the linear step is a similarity (rigid plus one global
+    scale), so part of a uniform brain-volume change is taken up before the
+    deformable step and never reaches det J. ``linear_volume_factor`` is that part,
+    follow-up over baseline: det(H)**2 for the halfway matrix H, which lesiontrack
+    writes as ``halfway_volume_factor`` = det(H). On the 24 MSLesSeg calibration pairs
+    with a planted uniform 2 % contraction, det J alone recovered a median 0.37 of
+    it under lesiontrack 0.3.0 and det J times det(H)**2 recovered 1.12 (1.02 to 1.45),
+    in line with 1.18 under lesiontrack 0.2.0, which had no scale step.
     """
     from scipy import ndimage as ndi
 
@@ -44,10 +53,13 @@ def brain_volume_change(jacobian: Path, brainmask_halfway: Path | None, baseline
     depth = ndi.distance_transform_edt(brain, sampling=[float(z) for z in img.header.get_zooms()[:3]])
     core = (depth > erode_mm) & ok
     inner = jac[core]
-    full = float((inside.mean() - 1.0) * 100.0)
-    er = float((inner.mean() - 1.0) * 100.0) if inner.size else float("nan")
+    f = float(linear_volume_factor)
+    full = float((inside.mean() * f - 1.0) * 100.0)
+    er = float((inner.mean() * f - 1.0) * 100.0) if inner.size else float("nan")
     return {
         "mean_jacobian": float(inside.mean()),
+        "linear_volume_factor": f,
+        "jacobian_only_change_pct": float((inside.mean() - 1.0) * 100.0),
         "change_pct": full,
         "median_jacobian": float(np.median(inside)),
         "brain_voxels": int(brain.sum()),
@@ -113,7 +125,9 @@ def measure(subject: str, scans: list[Scan], out_dir: Path, threads: int = 4, en
 
     baseline, last = scans[0], scans[-1]
     pair = res.pairs[-1]
-    bvc = brain_volume_change(pair.jacobian, pair.baseline_brainmask, pair.baseline_t1)
+    # summary.json describes the last pair, which is the one measured here
+    h = float(summary.get("halfway_volume_factor", 1.0))  # absent before lesiontrack 0.3.0: no scale step
+    bvc = brain_volume_change(pair.jacobian, pair.baseline_brainmask, pair.baseline_t1, linear_volume_factor=h * h)
     dt = pair.dt_years
     bvc["change_pct_per_year"] = bvc["change_pct"] / dt
     bvc["change_pct_per_year_eroded"] = bvc["change_pct_eroded"] / dt

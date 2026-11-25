@@ -11,14 +11,14 @@ th{background:#f3f3f3} td.num,th.num{text-align:right;font-variant-numeric:tabul
 .small{font-size:.82rem;color:#555} .dot{display:inline-block;width:.8em;height:.8em;border-radius:50%;vertical-align:-1px;margin-right:6px}
 </style></head><body>
 <h1>mscard report: P2</h1>
-<div class='meta'>Baseline T1 to follow-up T4, interval 4.59 years. Lesion masks: supplied. mscard 0.2.0, lesiontrack 0.3.0, generated 2026-11-25 04:55 UTC.</div>
+<div class='meta'>Baseline T1 to follow-up T4, interval 4.59 years. Lesion masks: supplied. mscard 0.2.0, lesiontrack 0.3.2, generated 2026-11-25 06:49 UTC.</div>
 <div class='box'><b>Research software, not a medical device.</b> Nothing on this page is a diagnosis. Every number below is produced by an open pipeline and, where a coloured badge is shown, the same pipeline was run on this subject's own baseline scan with known changes injected, and the badge says how well it recovered them. A green badge means the number can be read at face value on this scan; amber, read it together with the calibration table; red, the pipeline could not recover that kind of change here and the number should not be used.</div>
 <h2>Findings</h2><div class='cards'>
 <div class='card'><div class='n'>2</div><div class='l'>new lesions</div><span class="badge" style="background:#757575">masks supplied: detection is the annotator&#x27;s, not graded</span></div>
-<div class='card'><div class='n'>6</div><div class='l'>enlarging lesions</div><span class="badge" style="background:#2e7d32">calibration: 0 of 15 baseline lesions falsely called changed</span></div>
-<div class='card'><div class='n'>1</div><div class='l'>shrinking lesions</div><span class="badge" style="background:#2e7d32">calibration: 0 of 15 baseline lesions falsely called changed</span></div>
+<div class='card'><div class='n'>6</div><div class='l'>enlarging lesions</div><span class="badge" style="background:#ef6c00">calibration: 1 of 15 baseline lesions falsely called changed</span></div>
+<div class='card'><div class='n'>1</div><div class='l'>shrinking lesions</div><span class="badge" style="background:#ef6c00">calibration: 1 of 15 baseline lesions falsely called changed</span></div>
 <div class='card'><div class='n'>0</div><div class='l'>resolved lesions</div><span class="badge" style="background:#2e7d32">calibration: 0 of 15 baseline lesions falsely called resolved</span></div>
-<div class='card'><div class='n'>6.5 %/yr</div><div class='l'>lesion volume change (2.27 to 2.94 ml)</div><span class="badge" style="background:#2e7d32">calibration: 0 of 15 baseline lesions falsely called changed</span></div>
+<div class='card'><div class='n'>6.5 %/yr</div><div class='l'>lesion volume change (2.27 to 2.94 ml)</div><span class="badge" style="background:#ef6c00">calibration: 1 of 15 baseline lesions falsely called changed</span></div>
 <div class='card'><div class='n'>0</div><div class='l'>slowly expanding lesion candidates</div><span class="badge" style="background:#ef6c00">calibration: 6 candidates with no true expansion</span></div>
 <div class='card'><div class='n'>-0.80 %/yr</div><div class='l'>brain volume change (deformation field)</div><span class="badge" style="background:#2e7d32">calibration: -2.0 % injected, -2.0 % measured</span></div>
 <div class='card'><div class='n'>-2.36 %/yr</div><div class='l'>brain volume change (mask ratio)</div><span class="badge" style="background:#757575">not graded</span></div>
@@ -30,7 +30,7 @@ th{background:#f3f3f3} td.num,th.num{text-align:right;font-variant-numeric:tabul
 <table><tr><th>Report line</th><th>Truth</th><th>Pipeline reported</th><th>Reading</th></tr>
 <tr><td>New lesions</td><td>12 injected</td><td>12 reported (12 new, 0 adjacent fragment); 0 false new, 0 false fragments; largest missed –</td><td><span class="dot" style="background:#757575"></span>not graded (sensitivity 1.00)</td></tr>
 <tr><td>False new lesions</td><td>0</td><td>0</td><td><span class="dot" style="background:#757575"></span>not graded</td></tr>
-<tr><td>Enlarging or shrinking calls on baseline lesions</td><td>4 of 15 truly beyond ±9 %/yr</td><td>0 false (0.0 %), 1 missed; class agreement 0.93</td><td><span class="dot" style="background:#2e7d32"></span>read at face value</td></tr>
+<tr><td>Enlarging or shrinking calls on baseline lesions</td><td>4 of 15 truly beyond ±9 %/yr</td><td>1 false (6.7 %), 0 missed; class agreement 0.93</td><td><span class="dot" style="background:#ef6c00"></span>read with the calibration</td></tr>
 <tr><td>Resolved calls on baseline lesions</td><td>0 of 15</td><td>0</td><td><span class="dot" style="background:#2e7d32"></span>read at face value</td></tr>
 <tr><td>SEL candidates on baseline lesions</td><td>0</td><td>6 (0.40 per baseline lesion)</td><td><span class="dot" style="background:#ef6c00"></span>read with the calibration</td></tr>
 <tr><td>Brain volume change</td><td>-2.00 %</td><td>-2.05 % from the deformation field (recovery 1.02); -1.80 % from the mask ratio (recovery 0.90)</td><td><span class="dot" style="background:#2e7d32"></span>read at face value</td></tr>
